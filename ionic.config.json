@@ -1,0 +1,7 @@
+{
+  "name": "assignment3",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

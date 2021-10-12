@@ -1,13 +1,21 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonLabel, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import './AddActivity.css';
 import { useHistory } from "react-router-dom";
+import { useState, useRef } from 'react';
+import React from 'react';
 
 
 
 const ActiveRecording: React.FC = () => {
 
   let history = useHistory();
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [diff, setDiff] = useState("00:00:00");
+  const [timer, setTimer] = useState();
+
+
 
   return (
     <IonPage>
@@ -19,7 +27,7 @@ const ActiveRecording: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Start Recording</IonTitle>
+            <IonTitle size="large">Recording</IonTitle>
           </IonToolbar>
         </IonHeader>
 
@@ -27,8 +35,6 @@ const ActiveRecording: React.FC = () => {
               e.preventDefault();
               history.push("/Summary");
             }}>Finish Recording</IonButton>
-
-      
       </IonContent>
     </IonPage>
   );

@@ -11,10 +11,11 @@ import {
     IonTitle,
     IonToolbar
 } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
 import './AddActivity.css';
 import { useHistory } from "react-router-dom";
 import {arrowBack} from "ionicons/icons";
+
+
 
 
 
@@ -42,6 +43,7 @@ const ViewActivity: React.FC = () => {
             <IonTitle size="large">View Activity</IonTitle>
           </IonToolbar>
         </IonHeader>
+
 
 
       </IonContent>

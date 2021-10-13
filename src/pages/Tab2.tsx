@@ -1,44 +1,72 @@
-import { IonButton, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { add } from 'ionicons/icons';
-import ExploreContainer from '../components/ExploreContainer';
+import {
+    IonButton,
+    IonContent,
+    IonFab,
+    IonFabButton,
+    IonHeader,
+    IonIcon,
+    IonPage,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
+import {add} from 'ionicons/icons';
 import './Tab2.css';
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import {Storage} from "@ionic/storage";
+import React from "react";
+import {Motion} from "@capacitor/motion";
+
+let arr = [];
+
+const makeStorage = async (store: Storage) => {
+    await store.create();
+    const name = await store.get('name');
+    console.log(name)
+    arr.push(name)
+}
 
 
 const Tab2: React.FC = () => {
-  let history = useHistory();
+    let history = useHistory();
+    const store = new Storage();
+    makeStorage(store);
 
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>My Activities</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">My Activities</IonTitle>
-          </IonToolbar>
-        </IonHeader>
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={(e) => {
-              e.preventDefault();
-              history.push("/AddActivity");
-            }}>
-            <IonIcon icon={add} />
-          </IonFabButton>
-        </IonFab>
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>My Activities</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent fullscreen>
+                <IonHeader collapse="condense">
+                    <IonToolbar>
+                        <IonTitle size="large">My Activities</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
 
-        <IonButton expand="block" onClick={(e) => {
-              e.preventDefault();
-              history.push("/ViewActivity");
-            }}>View Activity</IonButton>
+                <IonFab vertical="bottom" horizontal="end" slot="fixed">
+                    <IonFabButton onClick={(e) => {
+                        e.preventDefault();
+                        history.push("/AddActivity");
+                    }}>
+                        <IonIcon icon={add}/>
+                    </IonFabButton>
+                </IonFab>
 
-      </IonContent>
-    </IonPage>
-  );
+                <IonButton expand="block" onClick={(e) => {
+                    e.preventDefault();
+                    history.push("/ViewActivity");
+                }}>View Activity</IonButton>
+
+
+
+
+
+            </IonContent>
+        </IonPage>
+    );
 };
 
 export default Tab2;

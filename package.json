@@ -6,12 +6,14 @@
     "@capacitor/android": "3.2.4",
     "@capacitor/app": "1.0.3",
     "@capacitor/core": "3.2.4",
+    "@capacitor/geolocation": "^1.1.0",
     "@capacitor/haptics": "1.1.0",
     "@capacitor/keyboard": "1.1.0",
     "@capacitor/motion": "^1.0.2",
     "@capacitor/status-bar": "1.0.3",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/device-motion": "^5.36.0",
+    "@ionic-native/geolocation": "^5.36.0",
     "@ionic-native/native-storage": "^5.36.0",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
@@ -28,6 +30,7 @@
     "add": "^2.0.6",
     "cordova": "^10.0.0",
     "cordova-plugin-device-motion": "^2.0.1",
+    "cordova-plugin-geolocation": "^4.1.0",
     "cordova-plugin-nativestorage": "^2.3.2",
     "ionicons": "^5.4.0",
     "leaflet": "^1.7.1",
@@ -66,14 +69,11 @@
       "react-app/jest"
     ]
   },
-  "browserslist":
-    [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
-  ,
-
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@capacitor/cli": "3.2.4",
     "@types/leaflet": "^1.7.5"

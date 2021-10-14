@@ -19,6 +19,7 @@ import React, {useEffect, useState} from 'react';
 import {DeviceMotion, DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 import {interval, Observable, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import { Geolocation } from '@ionic-native/geolocation';
 
 
 
@@ -38,6 +39,10 @@ const ActiveRecording: React.FC = () => {
     const [accelerationX, setAccelerationX] = useState(0);
     const [accelerationY, setAccelerationY] = useState(0);
     const [accelerationZ, setAccelerationZ] = useState(0);
+
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
+    const [altitude, setAltitude] = useState(0);
 
     const [time, setTime] = useState(0);
     const [watchOn, setWatchOn] = useState(false);
@@ -104,10 +109,29 @@ const ActiveRecording: React.FC = () => {
     }
 
     const getLocation = async () => {
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+        const coordinates = await Geolocation.getCurrentPosition(options);
+        console.log('Current position:', coordinates.coords.latitude);
+        console.log('Current position:', coordinates.coords.longitude);
+        console.log('Current position:', coordinates.coords.altitude);
+        setLatitude(coordinates.coords.latitude)
+        setLongitude(coordinates.coords.longitude)
+        if(coordinates.coords.altitude!=undefined){
+            setAltitude(coordinates.coords.altitude)
+        }
+
 
     };
 
     useIonViewWillEnter(() => {
+        setLatitude(0);
+        setLongitude(0);
+        setAltitude(0);
+
         handleReset();
         handleStart();
     });
@@ -142,7 +166,16 @@ const ActiveRecording: React.FC = () => {
                         </IonCardTitle>
                     </IonCardHeader>
                 </IonCard>
-
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>Location</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonCardSubtitle>Latitude: {latitude}</IonCardSubtitle>
+                        <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
+                        <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
+                    </IonCardContent>
+                </IonCard>
                 <IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Accelerometer</IonCardTitle>

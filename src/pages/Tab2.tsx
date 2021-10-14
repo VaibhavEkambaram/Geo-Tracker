@@ -7,7 +7,7 @@ import {
     IonIcon,
     IonPage,
     IonTitle,
-    IonToolbar
+    IonToolbar, useIonViewWillEnter
 } from '@ionic/react';
 import {add} from 'ionicons/icons';
 import './Tab2.css';
@@ -20,16 +20,19 @@ let arr = [];
 
 const makeStorage = async (store: Storage) => {
     await store.create();
-    const name = await store.get('name');
-    console.log(name)
-    arr.push(name)
+    const name = await store.get('activityList');
+    console.log("Name: " + name.key111.time)
+
 }
 
 
 const Tab2: React.FC = () => {
     let history = useHistory();
     const store = new Storage();
-    makeStorage(store);
+
+    useIonViewWillEnter(() => {
+        makeStorage(store);
+    });
 
 
     return (

@@ -8,7 +8,8 @@ import React from "react";
 
 const makeStorage = async (store: Storage) => {
   await store.create();
-  //await store.set('name', 'Peppercorn');
+  await store.set('activityList', {key111: {time: 'Peppercorn'},});
+  await store.set('activityList', {key111: {time: 'Peppercorn2'},});
 
 
 
@@ -26,13 +27,13 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Dashboard :)</IonTitle>
+          <IonTitle>Dashboard</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Dashboard :)</IonTitle>
+            <IonTitle size="large">Dashboard</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonCard>

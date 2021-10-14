@@ -11,7 +11,7 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
-    IonText, IonItem
+    IonText, IonItem, useIonViewWillEnter, IonCardSubtitle, useIonViewDidEnter
 } from '@ionic/react';
 import './AddActivity.css';
 import {useHistory} from "react-router-dom";
@@ -19,6 +19,14 @@ import React, {useEffect, useState} from 'react';
 import {DeviceMotion, DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 import {interval, Observable, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+
+
+
+
+
+interface ActivityInformation {
+    totalTime: number;
+}
 
 
 const ActiveRecording: React.FC = () => {
@@ -36,9 +44,8 @@ const ActiveRecording: React.FC = () => {
     const [status, setStatus] = useState(0);
 
 
-    let source: Observable<number>
+    let source: Observable<number>;
     let subscribe: { unsubscribe: () => void; };
-
 
     useEffect(() => {
         source = interval(1000);
@@ -96,6 +103,20 @@ const ActiveRecording: React.FC = () => {
         setStatus(0);
     }
 
+    const getLocation = async () => {
+
+    };
+
+    useIonViewWillEnter(() => {
+        handleReset();
+        handleStart();
+    });
+
+    useIonViewDidEnter( () => {
+        getLocation();
+
+    });
+
     return (
         <IonPage>
             <IonHeader>
@@ -110,52 +131,57 @@ const ActiveRecording: React.FC = () => {
                     </IonToolbar>
                 </IonHeader>
 
-                <IonButton expand="block" onClick={(e) => {
-                    //  subscription.unsubscribe();
-                    e.preventDefault();
-                    history.push("/Summary");
-                }}>Finish Recording</IonButton>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardSubtitle>Total Elapsed Time:</IonCardSubtitle>
+                        <IonCardTitle>
+                            {('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2)}
+                            :{('0' + Math.floor(time / 6000)).slice(-2)}
+                            :{('0' + Math.floor((time / 100) % 60)).slice(-2)}
+                            :{('0' + Math.floor(time % 100)).slice(-2)}
+                        </IonCardTitle>
+                    </IonCardHeader>
+                </IonCard>
 
-                <IonButton expand="block" onClick={async (e) => {
-                    console.log("Getting motion")
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>Accelerometer</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonCardSubtitle>X Axis: {accelerationX}</IonCardSubtitle>
+                        <IonCardSubtitle> Y Axis: {accelerationY}</IonCardSubtitle>
+                        <IonCardSubtitle> Z Axis: {accelerationZ}</IonCardSubtitle>
+                    </IonCardContent>
+                </IonCard>
 
-                    DeviceMotion.getCurrentAcceleration().then(
-                        (acceleration: DeviceMotionAccelerationData) => console.log(acceleration),
-                        (error: any) => console.log(error)
-                    );
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>Actions</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonButton expand="block" onClick={async (e) => {handleResume()}}>Pause/Resume Timer</IonButton>
+                        <IonButton expand="block" onClick={(e) => {
+                            handleStop();
+                            e.preventDefault();
 
-                }}>Acceleration Test</IonButton>
-
-                <IonItem><IonText>Timer</IonText></IonItem>
-                <IonLabel>{('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2)}</IonLabel>
-                <IonLabel>:{('0' + Math.floor(time / 6000)).slice(-2)}</IonLabel>
-                <IonLabel>:{('0' + Math.floor((time / 100) % 60)).slice(-2)}</IonLabel>
-                <IonLabel>:{('0' + Math.floor(time % 100)).slice(-2)}</IonLabel>
-                <IonItem><IonText>Accelerometer</IonText></IonItem>
-                <IonItem><IonLabel>X Axis: {accelerationX}</IonLabel></IonItem>
-                <IonItem><IonLabel> Y Axis: {accelerationY}</IonLabel></IonItem>
-                <IonItem><IonLabel> Z Axis: {accelerationZ}</IonLabel></IonItem>
+                            let activityInformation: ActivityInformation = {
+                                totalTime: time,
+                            };
+                            console.log(activityInformation)
 
 
-                <IonButton expand="block" onClick={async (e) => {
-                    handleStart()
+                            history.push({
+                                pathname: '/Summary',
+                                state: activityInformation,
 
-                }}>Start Timer</IonButton>
-                <IonButton expand="block" onClick={async (e) => {
-                    handleStop()
+                            })
 
-                }}>Stop Timer</IonButton>
-                <IonButton expand="block" onClick={async (e) => {
-                    handleResume()
 
-                }}>Resume Timer</IonButton>
-                <IonButton expand="block" onClick={async (e) => {
-                    handleReset()
 
-                }}>Reset Timer</IonButton>
-
+                        }}>Complete Activity</IonButton>
+                    </IonCardContent>
+                </IonCard>
             </IonContent>
-
         </IonPage>
     );
 };

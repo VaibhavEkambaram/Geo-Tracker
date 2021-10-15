@@ -51,6 +51,8 @@ const ActiveRecording: React.FC = () => {
     const [longitude, setLongitude] = useState(0);
     const [altitude, setAltitude] = useState(0);
 
+    const [averageSpeed, setAverageSpeed] = useState(0);
+
     const [totalDistance, setTotalDistance] = useState(0);
     const [locations, setLocations] = useState<Array<LocationSnippet>>([]);
 
@@ -134,8 +136,14 @@ const ActiveRecording: React.FC = () => {
             const d = R * c; // in metres
             console.log("Distance: " + d);
             setTotalDistance(totalDistance+d);
-
         }
+
+
+        let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
+        let avgSpeed = totalDistance/(parseInt(s));
+        setAverageSpeed(avgSpeed);
+
+
 
 
         let locationInstance: LocationSnippet = {
@@ -226,6 +234,7 @@ const ActiveRecording: React.FC = () => {
                         <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
                         <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
                         <IonCardSubtitle> Total Distance Covered: {totalDistance}</IonCardSubtitle>
+                        <IonCardSubtitle> Total Average Speed: {averageSpeed}</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
                 <IonCard>

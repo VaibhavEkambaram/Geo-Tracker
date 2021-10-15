@@ -11,8 +11,6 @@ const makeStorage = async (store: Storage) => {
   await store.set('activityList', {key111: {time: 'Peppercorn'},});
   await store.set('activityList', {key111: {time: 'Peppercorn2'},});
 
-
-
 }
 
 const Tab1: React.FC = () => {

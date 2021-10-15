@@ -14,25 +14,59 @@ import ExploreContainer from '../components/ExploreContainer';
 import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import React, {useState} from "react";
-
+import {Storage} from "@ionic/storage";
+import {MapContainer, Polyline, TileLayer} from "react-leaflet";
+import L, { LatLngExpression } from 'leaflet';
 
 
 interface ActivityInformation {
     totalTime: number;
+    locations: LocationSnippet[];
+}
+
+
+interface LocationSnippet {
+    latitude: number;
+    longitude: number;
+    altitude: number;
+}
+
+
+const makeStorage = async (store: Storage, totalTime: number, totalLocations: LocationSnippet[]) => {
+    await store.create();
+
 }
 
 const Summary: React.FC = () => {
     let history = useHistory<ActivityInformation>();
-
+    const store = new Storage();
     const [totalTime, setTotalTime] = useState(0);
 
-    let activityArray;
+    const [totalTimeState, setTotalTimeState] = useState([]);
+
+    let totalActivityTime;
+    let totalLocations;
+
+    let mapArray: Array<LatLngExpression> = [];
 
     useIonViewWillEnter(() => {
-        activityArray = history.location.state.totalTime
-        setTotalTime(activityArray)
-        console.log(activityArray)
+        totalActivityTime = history.location.state.totalTime
+        setTotalTime(totalActivityTime)
+        totalLocations = history.location.state.locations;
+
+        for (let i = 0; i < totalLocations.length; i++) {
+
+            console.log(totalLocations[i].latitude + " " + totalLocations[i].longitude);
+            var latng = new L.LatLng(totalLocations[i].latitude, totalLocations[i].longitude);
+            //mapArray.push(latng);
+        //    totalTimeState.push(latng);
+
+        }
+
     });
+
+
+
 
     return (
         <IonPage>

@@ -11,7 +11,7 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
-    IonText, IonItem, useIonViewWillEnter, IonCardSubtitle, useIonViewDidEnter
+    IonText, IonItem, useIonViewWillEnter, IonCardSubtitle, useIonViewDidEnter, useIonViewWillLeave, useIonViewDidLeave
 } from '@ionic/react';
 import './AddActivity.css';
 import {useHistory} from "react-router-dom";
@@ -27,6 +27,13 @@ import { Geolocation } from '@ionic-native/geolocation';
 
 interface ActivityInformation {
     totalTime: number;
+    locations: LocationSnippet[];
+}
+
+interface LocationSnippet {
+    latitude: number;
+    longitude: number;
+    altitude: number;
 }
 
 
@@ -44,88 +51,46 @@ const ActiveRecording: React.FC = () => {
     const [longitude, setLongitude] = useState(0);
     const [altitude, setAltitude] = useState(0);
 
+    const [totalDistance, setTotalDistance] = useState(0);
+    const [locations, setLocations] = useState<Array<LocationSnippet>>([]);
+
     const [time, setTime] = useState(0);
-    const [watchOn, setWatchOn] = useState(false);
-    const [status, setStatus] = useState(0);
+    const [timerStatus, setTimerStatus] = useState(false);
+    const timerSubscription = new Subject();
 
-
-    let source: Observable<number>;
-    let subscribe: { unsubscribe: () => void; };
 
     useEffect(() => {
-        source = interval(1000);
-        subscribe = source.subscribe(refreshInformation)
 
 
-        const unsubscribe = new Subject();
+
         interval(10)
-            .pipe(takeUntil(unsubscribe))
+            .pipe(takeUntil(timerSubscription))
             .subscribe(() => {
-                if (watchOn) {
-                    setTime(val => val + 1);
+                if (timerStatus) {
+
+
+
+
+                    let h = ('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2);
+                    let m = ('0' + Math.floor(time / 6000)).slice(-2);
+                    let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
+                    let n = ('0' + Math.floor(time % 100)).slice(-2);
+
+                    if(parseInt(s) % 5 === 0){
+                        if(parseInt(n)===0){
+                            getLocation();
+                        }
+                    }
+                    setTime(timer => timer + 1);
+
                 }
             });
         return () => {
-            unsubscribe.next(1)
-            unsubscribe.complete();
+            timerSubscription.next(1)
+            timerSubscription.complete();
         };
-    }, [watchOn]);
+    }, [time, timerStatus, locations]);
 
-    function refreshInformation() {
-        DeviceMotion.getCurrentAcceleration().then(
-            (acceleration: DeviceMotionAccelerationData) => {
-                setAccelerationX(acceleration.x)
-                setAccelerationY(acceleration.y)
-                setAccelerationZ(acceleration.z)
-            },
-            (error: any) => console.log(error)
-        );
-    }
-
-
-    const handleStart = () => {
-        setWatchOn(prevState => !prevState);
-        setStatus(1);
-    }
-
-
-    const handleResume = () => {
-        handleStart();
-    }
-
-
-    const handleStop = () => {
-        if (time !== 0) {
-            setWatchOn(false);
-        }
-        setStatus(2);
-    }
-
-
-    const handleReset = () => {
-        setTime(0);
-        setWatchOn(false);
-        setStatus(0);
-    }
-
-    const getLocation = async () => {
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
-        const coordinates = await Geolocation.getCurrentPosition(options);
-        console.log('Current position:', coordinates.coords.latitude);
-        console.log('Current position:', coordinates.coords.longitude);
-        console.log('Current position:', coordinates.coords.altitude);
-        setLatitude(coordinates.coords.latitude)
-        setLongitude(coordinates.coords.longitude)
-        if(coordinates.coords.altitude!=undefined){
-            setAltitude(coordinates.coords.altitude)
-        }
-
-
-    };
 
     useIonViewWillEnter(() => {
         setLatitude(0);
@@ -136,10 +101,96 @@ const ActiveRecording: React.FC = () => {
         handleStart();
     });
 
-    useIonViewDidEnter( () => {
-        getLocation();
-
+    useIonViewDidLeave( () => {
+        timerSubscription.unsubscribe();
     });
+
+    const getLocation = async () => {
+        let options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+        const coordinates = await Geolocation.getCurrentPosition(options);
+
+
+
+        console.log(latitude + " " + longitude);
+        console.log(coordinates.coords.latitude + " " + coordinates.coords.longitude);
+
+        if(latitude!=0 && longitude!=0){
+
+            const R = 6371e3; // metres
+            const φ1 = latitude * Math.PI/180; // φ, λ in radians
+            const φ2 = coordinates.coords.latitude * Math.PI/180;
+            const Δφ = (coordinates.coords.latitude-latitude) * Math.PI/180;
+            const Δλ = (coordinates.coords.longitude-longitude) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            const d = R * c; // in metres
+            console.log("Distance: " + d);
+            setTotalDistance(totalDistance+d);
+
+        }
+
+
+        let locationInstance: LocationSnippet = {
+            latitude: coordinates.coords.latitude,
+            longitude: coordinates.coords.longitude,
+            altitude: 0
+        }
+
+
+
+
+
+        let arr = locations;
+        arr.push(locationInstance);
+        setLocations(arr);
+
+
+        setLatitude(coordinates.coords.latitude)
+        setLongitude(coordinates.coords.longitude)
+        if(coordinates.coords.altitude!=undefined){
+            setAltitude(coordinates.coords.altitude)
+        }
+
+
+    };
+
+
+
+    const handleStart = () => {
+        setTimerStatus(prevState => !prevState);
+    }
+
+
+    const handleResume = () => {
+        handleStart();
+    }
+
+
+    const handleStop = () => {
+        if (time !== 0) {
+            setTimerStatus(false);
+        }
+    }
+
+
+    const handleReset = () => {
+        setTime(0);
+        setTimerStatus(false);
+    }
+
+
+
+
+
+
 
     return (
         <IonPage>
@@ -174,6 +225,7 @@ const ActiveRecording: React.FC = () => {
                         <IonCardSubtitle>Latitude: {latitude}</IonCardSubtitle>
                         <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
                         <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
+                        <IonCardSubtitle> Total Distance Covered: {totalDistance}</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
                 <IonCard>
@@ -194,13 +246,14 @@ const ActiveRecording: React.FC = () => {
                     <IonCardContent>
                         <IonButton expand="block" onClick={async (e) => {handleResume()}}>Pause/Resume Timer</IonButton>
                         <IonButton expand="block" onClick={(e) => {
+                            getLocation();
                             handleStop();
                             e.preventDefault();
 
                             let activityInformation: ActivityInformation = {
                                 totalTime: time,
+                                locations: locations,
                             };
-                            console.log(activityInformation)
 
 
                             history.push({

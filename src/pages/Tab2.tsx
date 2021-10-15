@@ -16,11 +16,11 @@ import {Storage} from "@ionic/storage";
 import React from "react";
 import {Motion} from "@capacitor/motion";
 
-let arr = [];
 
 const makeStorage = async (store: Storage) => {
     await store.create();
     const name = await store.get('activityList');
+
     console.log("Name: " + name.key111.time)
 
 }

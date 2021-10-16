@@ -9,7 +9,7 @@ import {
   IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { analytics, ellipse, settings, square, triangle, walk } from 'ionicons/icons';
+import {analytics, body, ellipse, settings, square, triangle, walk} from 'ionicons/icons';
 
 
 import Tab1 from './pages/Tab1';
@@ -79,7 +79,7 @@ const App: React.FC = () => (
             <IonLabel>Dashboard</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={walk} />
+            <IonIcon icon={body} />
             <IonLabel>My Activities</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab3" href="/tab3">

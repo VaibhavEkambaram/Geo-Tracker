@@ -26,6 +26,8 @@ import { Geolocation } from '@ionic-native/geolocation';
 
 
 interface ActivityInformation {
+    index: number;
+    startingTime: string;
     totalTime: number;
     locations: LocationSnippet[];
 }
@@ -59,7 +61,7 @@ const ActiveRecording: React.FC = () => {
     const [time, setTime] = useState(0);
     const [timerStatus, setTimerStatus] = useState(false);
     const timerSubscription = new Subject();
-
+    let startDate = new Date().toLocaleString().replace(',','');
 
     useEffect(() => {
 
@@ -95,9 +97,15 @@ const ActiveRecording: React.FC = () => {
 
 
     useIonViewWillEnter(() => {
+
         setLatitude(0);
         setLongitude(0);
         setAltitude(0);
+        setTotalDistance(0);
+        setAverageSpeed(0);
+
+
+        setLocations([]);
 
         handleReset();
         handleStart();
@@ -110,12 +118,13 @@ const ActiveRecording: React.FC = () => {
     const getLocation = async () => {
         let options = {
             enableHighAccuracy: true,
-            timeout: 5000,
+            timeout: 3000,
             maximumAge: 0
         };
         const coordinates = await Geolocation.getCurrentPosition(options);
 
 
+        console.log("Getting coordinates");
 
         console.log(latitude + " " + longitude);
         console.log(coordinates.coords.latitude + " " + coordinates.coords.longitude);
@@ -258,8 +267,10 @@ const ActiveRecording: React.FC = () => {
                             getLocation();
                             handleStop();
                             e.preventDefault();
-
+                            console.log(startDate)
                             let activityInformation: ActivityInformation = {
+                                index: 0,
+                                startingTime: startDate,
                                 totalTime: time,
                                 locations: locations,
                             };

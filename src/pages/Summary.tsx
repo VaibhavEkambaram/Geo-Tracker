@@ -10,16 +10,17 @@ import {
     IonTitle,
     IonToolbar, useIonViewWillEnter
 } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
 import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {Storage} from "@ionic/storage";
-import {MapContainer, Polyline, TileLayer} from "react-leaflet";
-import L, { LatLngExpression } from 'leaflet';
+import L, {LatLngExpression} from 'leaflet';
+import {Filesystem, Directory, Encoding} from '@capacitor/filesystem';
 
 
 interface ActivityInformation {
+    index: number;
+    startingTime: string,
     totalTime: number;
     locations: LocationSnippet[];
 }
@@ -29,12 +30,6 @@ interface LocationSnippet {
     latitude: number;
     longitude: number;
     altitude: number;
-}
-
-
-const makeStorage = async (store: Storage, totalTime: number, totalLocations: LocationSnippet[]) => {
-    await store.create();
-
 }
 
 const Summary: React.FC = () => {
@@ -49,23 +44,36 @@ const Summary: React.FC = () => {
 
     let mapArray: Array<LatLngExpression> = [];
 
+
+    const saveInformation = async (activityToBeAdded: ActivityInformation) => {
+        const store = new Storage();
+        await store.create();
+
+
+
+
+
+
+        console.log(await store.get("storedActivities"));
+        let arr = JSON.parse(await store.get("storedActivities"))
+        console.log(arr.length);
+        activityToBeAdded.index = (arr.length);
+        arr.push(activityToBeAdded)
+        await store.set("storedActivities", JSON.stringify(arr))
+
+
+
+    }
+
+
     useIonViewWillEnter(() => {
         totalActivityTime = history.location.state.totalTime
         setTotalTime(totalActivityTime)
-        totalLocations = history.location.state.locations;
 
-        for (let i = 0; i < totalLocations.length; i++) {
+        let activityToBeAdded = history.location.state;
 
-            console.log(totalLocations[i].latitude + " " + totalLocations[i].longitude);
-            var latng = new L.LatLng(totalLocations[i].latitude, totalLocations[i].longitude);
-            //mapArray.push(latng);
-        //    totalTimeState.push(latng);
-
-        }
-
+        saveInformation(activityToBeAdded);
     });
-
-
 
 
     return (
@@ -94,7 +102,6 @@ const Summary: React.FC = () => {
                         </IonCardTitle>
                     </IonCardHeader>
                 </IonCard>
-
 
 
                 <IonButton expand="block" onClick={(e) => {

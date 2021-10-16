@@ -8,8 +8,11 @@ import React from "react";
 
 const makeStorage = async (store: Storage) => {
   await store.create();
-  await store.set('activityList', {key111: {time: 'Peppercorn'},});
-  await store.set('activityList', {key111: {time: 'Peppercorn2'},});
+ // await store.set('activityList', {key111: {time: 'Peppercorn'},});
+ // await store.set('activityList', {key111: {time: 'Peppercorn2'},});
+  await store.set('storedActivities', "[]");
+  console.log(await store.get("storedActivities"))
+ // await store.remove('storedActivities');
 
 }
 

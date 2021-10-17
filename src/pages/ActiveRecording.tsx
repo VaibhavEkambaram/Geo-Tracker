@@ -27,6 +27,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 
 interface ActivityInformation {
     index: number;
+    key: number;
     startingTime: string;
     endingTime: string;
     totalTime: number;
@@ -81,7 +82,7 @@ const ActiveRecording: React.FC = () => {
                     let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
                     let n = ('0' + Math.floor(time % 100)).slice(-2);
 
-                    if(parseInt(s) % 2 === 0){
+                    if(parseInt(s) % 4 === 0){
                         if(parseInt(n)===0){
                             getLocation();
                         }
@@ -119,7 +120,7 @@ const ActiveRecording: React.FC = () => {
     const getLocation = async () => {
         let options = {
             enableHighAccuracy: true,
-            timeout: 1000,
+            timeout: 3000,
             maximumAge: 0
         };
         const coordinates = await Geolocation.getCurrentPosition(options);
@@ -257,7 +258,7 @@ const ActiveRecording: React.FC = () => {
                         <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
                         <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
                         <IonCardSubtitle> Total Distance Covered: {totalDistance} m</IonCardSubtitle>
-                        <IonCardSubtitle> Total Average Speed: {averageSpeed} m/s</IonCardSubtitle>
+                        <IonCardSubtitle> Total Average Speed: {averageSpeed} m/s ({averageSpeed*3.6} km/h)</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
                 <IonCard>
@@ -283,8 +284,12 @@ const ActiveRecording: React.FC = () => {
                             e.preventDefault();
                             console.log(startDate)
                             let endDate = new Date().toLocaleString().replace(',','');
+                            let epochTime = Date.now();
+
+
                             let activityInformation: ActivityInformation = {
                                 index: 0,
+                                key: epochTime,
                                 startingTime: startDate,
                                 endingTime: endDate,
                                 totalTime: time,

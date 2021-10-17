@@ -59,17 +59,17 @@ const ActivityListScreen: React.FC = () => {
 
 
                 {
-                    entities?.flatMap(({index, totalTime, startingTime, endingTime}) => {
+                    entities?.flatMap(({index, totalTime, startingTime, endingTime, key}) => {
 
 
                         return (
 
-                            <IonCard key={index} onClick={(e) => {
+                            <IonCard key={key} onClick={(e) => {
                                 e.preventDefault();
-                                console.log("I: " + index)
+                                console.log("I: " + key)
                                 history.push({
                                     pathname: '/ViewActivity',
-                                    state: index,
+                                    state: key,
 
                                 })
                             }}>

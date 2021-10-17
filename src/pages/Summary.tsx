@@ -7,6 +7,7 @@ import {Storage} from "@ionic/storage";
 
 interface ActivityInformation {
     index: number;
+    key: number;
     startingTime: string,
     endingTime: string;
     totalTime: number;

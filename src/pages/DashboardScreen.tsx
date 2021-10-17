@@ -10,13 +10,13 @@ const makeStorage = async (store: Storage) => {
   await store.create();
  // await store.set('activityList', {key111: {time: 'Peppercorn'},});
  // await store.set('activityList', {key111: {time: 'Peppercorn2'},});
-//  await store.set('storedActivities', "[]");
+  //await store.set('storedActivities', "[]");
  // console.log(await store.get("storedActivities"))
  // await store.remove('storedActivities');
 
 }
 
-const Tab1: React.FC = () => {
+const DashboardScreen: React.FC = () => {
   let history = useHistory();
   const store = new Storage();
 
@@ -75,4 +75,4 @@ const Tab1: React.FC = () => {
   );
 };
 
-export default Tab1;
+export default DashboardScreen;

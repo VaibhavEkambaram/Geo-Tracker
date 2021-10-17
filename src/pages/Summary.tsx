@@ -1,26 +1,14 @@
-import {
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader, IonCardSubtitle,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonPage, IonText,
-    IonTitle,
-    IonToolbar, useIonViewWillEnter
-} from '@ionic/react';
+import {IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
 import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {Storage} from "@ionic/storage";
-import L, {LatLngExpression} from 'leaflet';
-import {Filesystem, Directory, Encoding} from '@capacitor/filesystem';
 
 
 interface ActivityInformation {
     index: number;
     startingTime: string,
+    endingTime: string;
     totalTime: number;
     locations: LocationSnippet[];
 }
@@ -34,47 +22,40 @@ interface LocationSnippet {
 
 const Summary: React.FC = () => {
     let history = useHistory<ActivityInformation>();
-    const store = new Storage();
     const [totalTime, setTotalTime] = useState(0);
+    const [stringToSet, setStringToSet] = useState("");
 
-    const [totalTimeState, setTotalTimeState] = useState([]);
 
     let totalActivityTime;
-    let totalLocations;
-
-    let mapArray: Array<LatLngExpression> = [];
-
-
     const saveInformation = async (activityToBeAdded: ActivityInformation) => {
         const store = new Storage();
         await store.create();
-
-
-
-
-
 
         console.log(await store.get("storedActivities"));
         let arr = JSON.parse(await store.get("storedActivities"))
         console.log(arr.length);
         activityToBeAdded.index = (arr.length);
-        arr.push(activityToBeAdded)
-        await store.set("storedActivities", JSON.stringify(arr))
-
-
-
+        //arr.push(activityToBeAdded)
+        arr.unshift(activityToBeAdded)
+        setStringToSet(JSON.stringify(arr));
+        //await store.set("storedActivities", JSON.stringify(arr))
     }
 
+    async function executeSave() {
+        console.log("Saving");
+        const store = new Storage();
+        await store.create();
+        await store.set("storedActivities", stringToSet);
+    }
 
     useIonViewWillEnter(() => {
         totalActivityTime = history.location.state.totalTime
         setTotalTime(totalActivityTime)
+        saveInformation(history.location.state);
 
-        let activityToBeAdded = history.location.state;
-
-        saveInformation(activityToBeAdded);
     });
 
+    console.log("String to set: " + stringToSet);
 
     return (
         <IonPage>
@@ -106,6 +87,7 @@ const Summary: React.FC = () => {
 
                 <IonButton expand="block" onClick={(e) => {
                     e.preventDefault();
+                    executeSave();
                     history.push("/tab2");
                 }}>Save Activity</IonButton>
                 <IonButton expand="block" onClick={(e) => {

@@ -1,23 +1,18 @@
 import {
-    IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle,
-    IonContent,
+    IonCard, IonCardSubtitle, IonCardTitle, IonContent,
     IonFab,
-    IonFabButton,
-    IonHeader,
-    IonIcon, IonItem, IonLabel,
-    IonPage, IonRow,
-    IonTitle,
+    IonFabButton, IonHeader,
+    IonIcon, IonItem, IonPage, IonTitle,
     IonToolbar, useIonViewWillEnter
 } from '@ionic/react';
-import {add} from 'ionicons/icons';
+import {add, walk} from 'ionicons/icons';
 import './Tab2.css';
 import {useHistory} from "react-router-dom";
 import {Storage} from "@ionic/storage";
 import React, {useState} from "react";
-import {Motion} from "@capacitor/motion";
 
 
-const Tab2: React.FC = () => {
+const ActivityListScreen: React.FC = () => {
     let history = useHistory();
     const store = new Storage();
 
@@ -63,14 +58,8 @@ const Tab2: React.FC = () => {
                 </IonFab>
 
 
-
-
                 {
-                    entities?.flatMap(({index, totalTime, startingTime}) => {
-
-
-
-
+                    entities?.flatMap(({index, totalTime, startingTime, endingTime}) => {
 
 
                         return (
@@ -84,21 +73,23 @@ const Tab2: React.FC = () => {
 
                                 })
                             }}>
-                                <IonCardHeader>
+
+
+                                <IonItem>
                                     <IonCardTitle>{('0' + Math.floor((totalTime / (1000 * 60 * 60)) % 24)).slice(-2)}
                                         :{('0' + Math.floor(totalTime / 6000)).slice(-2)}
                                         :{('0' + Math.floor((totalTime / 100) % 60)).slice(-2)}
                                         :{('0' + Math.floor(totalTime % 100)).slice(-2)}</IonCardTitle>
+                                    <IonIcon slot="end" icon={walk}/>
+                                </IonItem>
+                                <IonItem>
                                     <IonCardSubtitle>{startingTime}</IonCardSubtitle>
-                                </IonCardHeader>
+                                </IonItem>
                             </IonCard>
 
-                    )
+                        )
                     })
                 }
-
-
-
 
 
             </IonContent>
@@ -106,4 +97,4 @@ const Tab2: React.FC = () => {
     );
 };
 
-export default Tab2;
+export default ActivityListScreen;

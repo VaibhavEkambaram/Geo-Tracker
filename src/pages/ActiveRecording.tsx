@@ -28,6 +28,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 interface ActivityInformation {
     index: number;
     startingTime: string;
+    endingTime: string;
     totalTime: number;
     locations: LocationSnippet[];
 }
@@ -80,7 +81,7 @@ const ActiveRecording: React.FC = () => {
                     let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
                     let n = ('0' + Math.floor(time % 100)).slice(-2);
 
-                    if(parseInt(s) % 5 === 0){
+                    if(parseInt(s) % 2 === 0){
                         if(parseInt(n)===0){
                             getLocation();
                         }
@@ -118,7 +119,7 @@ const ActiveRecording: React.FC = () => {
     const getLocation = async () => {
         let options = {
             enableHighAccuracy: true,
-            timeout: 3000,
+            timeout: 1000,
             maximumAge: 0
         };
         const coordinates = await Geolocation.getCurrentPosition(options);
@@ -148,8 +149,21 @@ const ActiveRecording: React.FC = () => {
         }
 
 
+
+
+        let h = (('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2));
+        let hs = parseInt(h) * 3600;
+        let m = ('0' + Math.floor(time / 6000)).slice(-2);
+        let ms = parseInt(m) * 60;
         let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
-        let avgSpeed = totalDistance/(parseInt(s));
+        let ss = parseInt(s);
+        let n = ('0' + Math.floor(time % 100)).slice(-2);
+        let ns = parseInt(n) / 100;
+
+        console.log("Number of seconds: " + (hs + ms + ss + ns));
+        let cumulativeSeconds = (hs + ms + ss + ns);
+
+        let avgSpeed = totalDistance/cumulativeSeconds;
         setAverageSpeed(avgSpeed);
 
 
@@ -242,8 +256,8 @@ const ActiveRecording: React.FC = () => {
                         <IonCardSubtitle>Latitude: {latitude}</IonCardSubtitle>
                         <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
                         <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
-                        <IonCardSubtitle> Total Distance Covered: {totalDistance}</IonCardSubtitle>
-                        <IonCardSubtitle> Total Average Speed: {averageSpeed}</IonCardSubtitle>
+                        <IonCardSubtitle> Total Distance Covered: {totalDistance} m</IonCardSubtitle>
+                        <IonCardSubtitle> Total Average Speed: {averageSpeed} m/s</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
                 <IonCard>
@@ -268,9 +282,11 @@ const ActiveRecording: React.FC = () => {
                             handleStop();
                             e.preventDefault();
                             console.log(startDate)
+                            let endDate = new Date().toLocaleString().replace(',','');
                             let activityInformation: ActivityInformation = {
                                 index: 0,
                                 startingTime: startDate,
+                                endingTime: endDate,
                                 totalTime: time,
                                 locations: locations,
                             };

@@ -12,9 +12,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import {analytics, body, ellipse, settings, square, triangle, walk} from 'ionicons/icons';
 
 
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import DashboardScreen from './pages/DashboardScreen';
+import ActivityListScreen from './pages/ActivityListScreen';
+import SettingsScreen from './pages/SettingsScreen';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -46,13 +46,13 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route exact path="/tab1">
-            <Tab1 />
+            <DashboardScreen />
           </Route>
           <Route exact path="/tab2">
-            <Tab2 />
+            <ActivityListScreen />
           </Route>
           <Route path="/tab3">
-            <Tab3 />
+            <SettingsScreen />
           </Route>
           <Route exact path="/AddActivity">
             <AddActivity />

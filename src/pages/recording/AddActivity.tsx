@@ -11,8 +11,6 @@ import {
     IonTitle,
     IonToolbar
 } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import {arrowBack, bicycle, colorWand, pulse, walk} from "ionicons/icons";
 import React from "react";

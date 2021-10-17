@@ -1,5 +1,4 @@
 import {IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
-import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {Storage} from "@ionic/storage";
@@ -11,6 +10,7 @@ interface ActivityInformation {
     startingTime: string,
     endingTime: string;
     totalTime: number;
+    totalDistance: number;
     locations: LocationSnippet[];
 }
 

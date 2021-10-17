@@ -1,8 +1,7 @@
 import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/react';
-import './Tab3.css';
 import React from "react";
 
-const SettingsScreen: React.FC = () => {
+const Settings: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -24,4 +23,4 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default SettingsScreen;
+export default Settings;

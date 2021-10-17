@@ -6,13 +6,12 @@ import {
     IonToolbar, useIonViewWillEnter
 } from '@ionic/react';
 import {add, walk} from 'ionicons/icons';
-import './Tab2.css';
 import {useHistory} from "react-router-dom";
 import {Storage} from "@ionic/storage";
 import React, {useState} from "react";
 
 
-const ActivityListScreen: React.FC = () => {
+const ActivityList: React.FC = () => {
     let history = useHistory();
     const store = new Storage();
 
@@ -68,7 +67,7 @@ const ActivityListScreen: React.FC = () => {
                                 e.preventDefault();
                                 console.log("I: " + key)
                                 history.push({
-                                    pathname: '/ViewActivity',
+                                    pathname: '/ActivityView',
                                     state: key,
 
                                 })
@@ -97,4 +96,4 @@ const ActivityListScreen: React.FC = () => {
     );
 };
 
-export default ActivityListScreen;
+export default ActivityList;

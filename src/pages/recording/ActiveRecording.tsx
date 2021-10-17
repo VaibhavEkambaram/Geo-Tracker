@@ -13,17 +13,13 @@ import {
     IonToolbar,
     IonText, IonItem, useIonViewWillEnter, IonCardSubtitle, useIonViewDidEnter, useIonViewWillLeave, useIonViewDidLeave
 } from '@ionic/react';
-import './AddActivity.css';
 import {useHistory} from "react-router-dom";
 import React, {useEffect, useState} from 'react';
 import {DeviceMotion, DeviceMotionAccelerationData} from "@ionic-native/device-motion";
 import {interval, Observable, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-import { Geolocation } from '@ionic-native/geolocation';
-
-
-
-
+import {Geolocation} from '@ionic-native/geolocation';
+import {Insomnia} from '@ionic-native/insomnia';
 
 interface ActivityInformation {
     index: number;
@@ -31,6 +27,7 @@ interface ActivityInformation {
     startingTime: string;
     endingTime: string;
     totalTime: number;
+    totalDistance: number;
     locations: LocationSnippet[];
 }
 
@@ -45,11 +42,12 @@ const ActiveRecording: React.FC = () => {
 
     let history = useHistory();
 
-    // let deviceMotion = new DeviceMotion;
 
     const [accelerationX, setAccelerationX] = useState(0);
     const [accelerationY, setAccelerationY] = useState(0);
     const [accelerationZ, setAccelerationZ] = useState(0);
+
+    const [stepCount, setStepCount] = useState(0);
 
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
@@ -61,12 +59,12 @@ const ActiveRecording: React.FC = () => {
     const [locations, setLocations] = useState<Array<LocationSnippet>>([]);
 
     const [time, setTime] = useState(0);
+
+    const [startDate, setStartDate] = useState("");
     const [timerStatus, setTimerStatus] = useState(false);
     const timerSubscription = new Subject();
-    let startDate = new Date().toLocaleString().replace(',','');
 
     useEffect(() => {
-
 
 
         interval(10)
@@ -75,18 +73,28 @@ const ActiveRecording: React.FC = () => {
                 if (timerStatus) {
 
 
-
-
                     let h = ('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2);
                     let m = ('0' + Math.floor(time / 6000)).slice(-2);
                     let s = ('0' + Math.floor((time / 100) % 60)).slice(-2);
                     let n = ('0' + Math.floor(time % 100)).slice(-2);
 
-                    if(parseInt(s) % 4 === 0){
-                        if(parseInt(n)===0){
+                    if (parseInt(s) % 4 === 0) {
+                        if (parseInt(n) === 0) {
                             getLocation();
                         }
                     }
+
+                    DeviceMotion.getCurrentAcceleration().then(
+                        (acceleration: DeviceMotionAccelerationData) => {
+                            setAccelerationX(acceleration.x)
+                            setAccelerationY(acceleration.y)
+                            setAccelerationZ(acceleration.z)
+                        },
+                        (error: any) => console.log(error)
+                    );
+
+
+
                     setTime(timer => timer + 1);
 
                 }
@@ -99,7 +107,7 @@ const ActiveRecording: React.FC = () => {
 
 
     useIonViewWillEnter(() => {
-
+        Insomnia.keepAwake();
         setLatitude(0);
         setLongitude(0);
         setAltitude(0);
@@ -108,12 +116,14 @@ const ActiveRecording: React.FC = () => {
 
 
         setLocations([]);
-
+        setStartDate(new Date().toLocaleString().replace(',', ''));
         handleReset();
         handleStart();
     });
 
-    useIonViewDidLeave( () => {
+
+    useIonViewDidLeave(() => {
+        Insomnia.allowSleepAgain();
         timerSubscription.unsubscribe();
     });
 
@@ -131,25 +141,23 @@ const ActiveRecording: React.FC = () => {
         console.log(latitude + " " + longitude);
         console.log(coordinates.coords.latitude + " " + coordinates.coords.longitude);
 
-        if(latitude!=0 && longitude!=0){
+        if (latitude != 0 && longitude != 0) {
 
             const R = 6371e3; // metres
-            const φ1 = latitude * Math.PI/180; // φ, λ in radians
-            const φ2 = coordinates.coords.latitude * Math.PI/180;
-            const Δφ = (coordinates.coords.latitude-latitude) * Math.PI/180;
-            const Δλ = (coordinates.coords.longitude-longitude) * Math.PI/180;
+            const φ1 = latitude * Math.PI / 180; // φ, λ in radians
+            const φ2 = coordinates.coords.latitude * Math.PI / 180;
+            const Δφ = (coordinates.coords.latitude - latitude) * Math.PI / 180;
+            const Δλ = (coordinates.coords.longitude - longitude) * Math.PI / 180;
 
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
                 Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
             const d = R * c; // in metres
             console.log("Distance: " + d);
-            setTotalDistance(totalDistance+d);
+            setTotalDistance(totalDistance + d);
         }
-
-
 
 
         let h = (('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2));
@@ -164,36 +172,43 @@ const ActiveRecording: React.FC = () => {
         console.log("Number of seconds: " + (hs + ms + ss + ns));
         let cumulativeSeconds = (hs + ms + ss + ns);
 
-        let avgSpeed = totalDistance/cumulativeSeconds;
+        let avgSpeed = totalDistance / cumulativeSeconds;
         setAverageSpeed(avgSpeed);
 
-
-
-
-        let locationInstance: LocationSnippet = {
-            latitude: coordinates.coords.latitude,
-            longitude: coordinates.coords.longitude,
-            altitude: 0
+        if(coordinates.coords.altitude!==0) {
+            let locationInstance: LocationSnippet = {
+                latitude: coordinates.coords.latitude,
+                longitude: coordinates.coords.longitude,
+                altitude: coordinates.coords.altitude,
+            }
+            let arr = locations;
+            arr.push(locationInstance);
+            setLocations(arr);
+        } else {
+            let locationInstance: LocationSnippet = {
+                latitude: coordinates.coords.latitude,
+                longitude: coordinates.coords.longitude,
+                altitude: 0,
+            }
+            let arr = locations;
+            arr.push(locationInstance);
+            setLocations(arr);
         }
 
 
 
 
 
-        let arr = locations;
-        arr.push(locationInstance);
-        setLocations(arr);
 
 
         setLatitude(coordinates.coords.latitude)
         setLongitude(coordinates.coords.longitude)
-        if(coordinates.coords.altitude!=undefined){
+        if (coordinates.coords.altitude != undefined) {
             setAltitude(coordinates.coords.altitude)
         }
 
 
     };
-
 
 
     const handleStart = () => {
@@ -217,11 +232,6 @@ const ActiveRecording: React.FC = () => {
         setTime(0);
         setTimerStatus(false);
     }
-
-
-
-
-
 
 
     return (
@@ -254,11 +264,11 @@ const ActiveRecording: React.FC = () => {
                         <IonCardTitle>Location</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                        <IonCardSubtitle>Latitude: {latitude}</IonCardSubtitle>
-                        <IonCardSubtitle> Longitude: {longitude}</IonCardSubtitle>
+                        <IonCardSubtitle>Coordinates: {latitude} {longitude}</IonCardSubtitle>
                         <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
                         <IonCardSubtitle> Total Distance Covered: {totalDistance} m</IonCardSubtitle>
-                        <IonCardSubtitle> Total Average Speed: {averageSpeed} m/s ({averageSpeed*3.6} km/h)</IonCardSubtitle>
+                        <IonCardSubtitle> Total Average Speed: {averageSpeed} m/s
+                            ({averageSpeed * 3.6} km/h)</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
                 <IonCard>
@@ -277,15 +287,16 @@ const ActiveRecording: React.FC = () => {
                         <IonCardTitle>Actions</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                        <IonButton expand="block" onClick={async (e) => {handleResume()}}>Pause/Resume Timer</IonButton>
+                        <IonButton expand="block" onClick={async (e) => {
+                            handleResume()
+                        }}>Pause/Resume Timer</IonButton>
                         <IonButton expand="block" onClick={(e) => {
+                            let endDate = new Date().toLocaleString().replace(',', '');
                             getLocation();
                             handleStop();
                             e.preventDefault();
                             console.log(startDate)
-                            let endDate = new Date().toLocaleString().replace(',','');
                             let epochTime = Date.now();
-
 
                             let activityInformation: ActivityInformation = {
                                 index: 0,
@@ -293,16 +304,15 @@ const ActiveRecording: React.FC = () => {
                                 startingTime: startDate,
                                 endingTime: endDate,
                                 totalTime: time,
+                                totalDistance: totalDistance,
                                 locations: locations,
                             };
-
 
                             history.push({
                                 pathname: '/Summary',
                                 state: activityInformation,
 
                             })
-
 
 
                         }}>Complete Activity</IonButton>

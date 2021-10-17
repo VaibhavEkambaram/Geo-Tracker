@@ -12,9 +12,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import {analytics, body, ellipse, settings, square, triangle, walk} from 'ionicons/icons';
 
 
-import DashboardScreen from './pages/DashboardScreen';
-import ActivityListScreen from './pages/ActivityListScreen';
-import SettingsScreen from './pages/SettingsScreen';
+import Dashboard from './pages/home/Dashboard';
+import ActivityList from './pages/home/ActivityList';
+import Settings from './pages/home/Settings';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -34,11 +34,11 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import AddActivity from './pages/AddActivity';
-import StartRecording from './pages/StartRecording';
-import ActiveRecording from './pages/ActiveRecording';
-import Summary from './pages/Summary';
-import ViewActivity from './pages/ViewActivity';
+import AddActivity from './pages/recording/AddActivity';
+import StartRecording from './pages/recording/StartRecording';
+import ActiveRecording from './pages/recording/ActiveRecording';
+import Summary from './pages/recording/Summary';
+import ActivityView from './pages/list/ActivityView';
 
 const App: React.FC = () => (
   <IonApp>
@@ -46,13 +46,13 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route exact path="/tab1">
-            <DashboardScreen />
+            <Dashboard />
           </Route>
           <Route exact path="/tab2">
-            <ActivityListScreen />
+            <ActivityList />
           </Route>
           <Route path="/tab3">
-            <SettingsScreen />
+            <Settings />
           </Route>
           <Route exact path="/AddActivity">
             <AddActivity />
@@ -66,8 +66,8 @@ const App: React.FC = () => (
           <Route exact path="/Summary">
             <Summary />
           </Route>
-          <Route exact path="/ViewActivity">
-            <ViewActivity />
+          <Route exact path="/ActivityView">
+            <ActivityView />
           </Route>
           <Route exact path="/">
             <Redirect to="/tab1" />

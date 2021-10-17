@@ -11,7 +11,6 @@ import {
     IonTitle,
     IonToolbar, useIonAlert, useIonViewWillEnter
 } from '@ionic/react';
-import './ViewActivity.css';
 import {useHistory} from "react-router-dom";
 import {arrowBack} from "ionicons/icons";
 import {MapContainer, TileLayer, Marker, Popup, useMap, Polyline} from 'react-leaflet'
@@ -21,15 +20,15 @@ import {Fragment} from "ionicons/dist/types/stencil-public-runtime";
 import {LatLng, latLng, LatLngExpression} from "leaflet";
 import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
 import {Storage} from "@ionic/storage";
-import {MapView} from "../components/MapView";
+import {MapView} from "../../components/MapView";
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder';
 
 
-const ViewActivity: React.FC = () => {
+const ActivityView: React.FC = () => {
 
 
     let history = useHistory();
     let pos;
-    //let pos = [latLng(-41.289989, 174.767781), latLng(-41.288141, 174.768240), latLng(-41.287278, 174.768723), latLng(-41.287278, 174.768723), latLng(-41.286372,174.767604)];
 
     const [present] = useIonAlert();
 
@@ -37,9 +36,18 @@ const ViewActivity: React.FC = () => {
     const [latOrigin, setLatOrigin] = useState(0);
     const [lonOrigin, setLonOrigin] = useState(0);
 
+    const [latDest, setLatDest] = useState(0);
+    const [lonDest, setLonDest] = useState(0);
+
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
+    const [totalDistance, setTotalDistance] = useState(0);
+    const [averageSpeed, setAverageSpeed] = useState(0);
+
+    const [locality, setLocality] = useState("");
+
+
     const [key, setKey] = useState(0);
 
 
@@ -112,17 +120,45 @@ const ViewActivity: React.FC = () => {
         setStartTime(arr[index].startingTime);
         setEndTime(arr[index].endingTime);
         setTotalTime(arr[index].totalTime);
+        setTotalDistance(arr[index].totalDistance);
 
         for (let i = 0; i < arr[index].locations.length; i++) {
             if (i === 0) {
                 setLatOrigin(arr[index].locations[i].latitude)
                 setLonOrigin(arr[index].locations[i].longitude)
+            } else {
+                if(i === (arr[index].locations.length - 1)){
+                    setLatDest(arr[index].locations[i].latitude)
+                    setLonDest(arr[index].locations[i].longitude)
+                }
             }
 
             console.log(arr[index].locations[i].latitude + " " + arr[index].locations[i].longitude);
             pos.push(latLng(arr[index].locations[i].latitude, arr[index].locations[i].longitude));
         }
         setPositions(pos);
+
+        let h = (('0' + Math.floor((arr[index].totalTime / (1000 * 60 * 60)) % 24)).slice(-2));
+        let hs = parseInt(h) * 3600;
+        let m = ('0' + Math.floor(arr[index].totalTime / 6000)).slice(-2);
+        let ms = parseInt(m) * 60;
+        let s = ('0' + Math.floor((arr[index].totalTime / 100) % 60)).slice(-2);
+        let ss = parseInt(s);
+        let n = ('0' + Math.floor(arr[index].totalTime % 100)).slice(-2);
+        let ns = parseInt(n) / 100;
+
+        let cumulativeSeconds = (hs + ms + ss + ns);
+        let avgSpeed = arr[index].totalDistance / cumulativeSeconds;
+        setAverageSpeed(avgSpeed);
+
+        let options: NativeGeocoderOptions = {
+            useLocale: true,
+            maxResults: 5
+        };
+
+        NativeGeocoder.reverseGeocode(arr[index].locations[0].latitude, arr[index].locations[0].longitude, options)
+            .then((result: NativeGeocoderResult[]) => setLocality(result[0].subLocality + ", " + result[0].locality))
+            .catch((error: any) => console.log(error));
 
 
     }
@@ -180,8 +216,19 @@ const ViewActivity: React.FC = () => {
                         <IonLabel>End Time: {endTime}</IonLabel>
                     </IonCardContent>
                 </IonCard>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardSubtitle>Total Distance:</IonCardSubtitle>
+                        <IonCardTitle>{totalDistance} m</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonLabel>Average Speed (m/s): {averageSpeed} m/s</IonLabel>
+                        <div></div>
+                        <IonLabel>Average Speed (km/h): {averageSpeed*3.6} km/h</IonLabel>
+                    </IonCardContent>
+                </IonCard>
 
-                <MapView positions={positions} lat={latOrigin} lon={lonOrigin}/>
+                <MapView positions={positions} lat={latOrigin} lon={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}/>
 
 
                 <IonCard>
@@ -204,4 +251,4 @@ const ViewActivity: React.FC = () => {
     );
 };
 
-export default ViewActivity;
+export default ActivityView;

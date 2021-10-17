@@ -1,27 +1,27 @@
+
 import {
     IonButton,
     IonCard,
     IonCardContent,
-    IonCardHeader, IonCardSubtitle,
+    IonCardSubtitle,
     IonCardTitle,
     IonContent,
     IonHeader,
-    IonIcon, IonLabel,
-    IonPage, IonProgressBar, IonTitle,
-    IonToolbar, useIonViewWillEnter
+    IonIcon,
+    IonPage,
+    IonProgressBar,
+    IonTitle,
+    IonToolbar,
+    useIonViewWillEnter
 } from '@ionic/react';
-import './AddActivity.css';
+import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import {arrowBack} from "ionicons/icons";
-import React, {useState} from "react";
 
 
 const StartRecording: React.FC = () => {
 
     let history = useHistory();
-
-    let interval;
-
     const [startProgressBar, setStartProgressBar] = useState(0);
 
     useIonViewWillEnter(() => {
@@ -63,12 +63,19 @@ const StartRecording: React.FC = () => {
                     <IonCardContent>
                         <IonCardTitle>Click the button below to begin recording.</IonCardTitle>
                         <IonCardSubtitle>Recording will begin after a 3 second countdown.</IonCardSubtitle>
-                        <br></br>
-                        <IonProgressBar value={startProgressBar}></IonProgressBar><br/>
+                        <br/>
+                        <IonProgressBar value={startProgressBar}/><br/>
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();
                             startRecordingButtonHandler();
                         }}>Start Recording Activity</IonButton>
+                    </IonCardContent>
+                </IonCard>
+
+                <IonCard>
+                    <IonCardContent>
+                        <IonCardSubtitle>If you would like to change your activity selection, then please use the back
+                            button to return to the previous screen.</IonCardSubtitle>
                     </IonCardContent>
                 </IonCard>
 

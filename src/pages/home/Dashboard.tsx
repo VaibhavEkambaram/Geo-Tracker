@@ -1,25 +1,8 @@
-import {
-    AlertButton,
-    AlertOptions,
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar, useIonAlert,
-    useIonViewWillEnter
-} from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
+import React, {useState} from "react";
+import {AlertButton, AlertOptions, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonAlert, useIonViewWillEnter} from '@ionic/react';
 import {useHistory} from "react-router-dom";
 import {Storage} from '@ionic/storage';
-import React, {useState} from "react";
 import {HookOverlayOptions} from '@ionic/react/dist/types/hooks/HookOverlayOptions';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 const initialStorageCheck = async (store: Storage, present: { (message: string, buttons?: AlertButton[] | undefined): void; (options: AlertOptions & HookOverlayOptions): void; (arg0: { cssClass: string; header: string; message: string; buttons: (string | { text: string; handler: (d: any) => void; })[]; onDidDismiss: (e: any) => void; }): void; }) => {
     await store.create();
@@ -41,7 +24,7 @@ const initialStorageCheck = async (store: Storage, present: { (message: string, 
 
 
 
-const DashboardScreen: React.FC = () => {
+const Dashboard: React.FC = () => {
     let history = useHistory();
     const store = new Storage();
 
@@ -106,4 +89,4 @@ const DashboardScreen: React.FC = () => {
     );
 };
 
-export default DashboardScreen;
+export default Dashboard;

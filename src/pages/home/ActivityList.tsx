@@ -2,7 +2,7 @@ import {
     IonCard, IonCardSubtitle, IonCardTitle, IonContent,
     IonFab,
     IonFabButton, IonHeader,
-    IonIcon, IonItem, IonPage, IonTitle,
+    IonIcon, IonItem, IonList, IonPage, IonTitle,
     IonToolbar, useIonViewWillEnter
 } from '@ionic/react';
 import {add, walk} from 'ionicons/icons';
@@ -29,9 +29,7 @@ const ActivityList: React.FC = () => {
         setEntities(arr);
     }
 
-    console.log("Number of elements: " + entities.length);
-    console.log(entities[0])
-    console.log(entities[1])
+
 
     return (
         <IonPage>
@@ -56,7 +54,7 @@ const ActivityList: React.FC = () => {
                     </IonFabButton>
                 </IonFab>
 
-
+                <IonList>
                 {
                     entities?.flatMap(({index, totalTime, startingTime, endingTime, key}) => {
 
@@ -65,7 +63,6 @@ const ActivityList: React.FC = () => {
 
                             <IonCard key={key} onClick={(e) => {
                                 e.preventDefault();
-                                console.log("I: " + key)
                                 history.push({
                                     pathname: '/ActivityView',
                                     state: key,
@@ -82,13 +79,14 @@ const ActivityList: React.FC = () => {
                                     <IonIcon slot="end" icon={walk}/>
                                 </IonItem>
                                 <IonItem>
-                                    <IonCardSubtitle>{startingTime}</IonCardSubtitle>
+                                    <IonCardSubtitle>{new Date(startingTime).toLocaleString()}</IonCardSubtitle>
                                 </IonItem>
                             </IonCard>
 
                         )
                     })
                 }
+                </IonList>
 
 
             </IonContent>

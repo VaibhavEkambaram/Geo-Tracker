@@ -9,8 +9,7 @@ import {
     IonCardSubtitle,
     IonCardTitle,
     IonContent,
-    IonHeader, IonLabel,
-    IonPage,
+    IonHeader, IonPage,
     IonTitle,
     IonToolbar,
     useIonAlert,
@@ -20,7 +19,6 @@ import {useHistory} from "react-router-dom";
 import {Storage} from '@ionic/storage';
 import {HookOverlayOptions} from '@ionic/react/dist/types/hooks/HookOverlayOptions';
 import {LastActivity} from "../../components/LastActivity";
-import TimeToSeconds from "../../util/TimeToSeconds";
 
 
 const Dashboard: React.FC = () => {
@@ -162,9 +160,6 @@ const Dashboard: React.FC = () => {
                         <IonCardSubtitle>Last Activity</IonCardSubtitle>
 
                         <LastActivity entities={entities}/>
-
-
-                        <IonCardSubtitle>Actions</IonCardSubtitle>
 
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();

@@ -3,11 +3,9 @@ import {
     IonCard,
     IonCardContent,
     IonCardHeader,
-    IonCardSubtitle,
     IonCardTitle,
     IonContent,
-    IonHeader, IonLabel,
-    IonPage,
+    IonHeader, IonPage,
     IonTitle,
     IonToolbar,
     useIonViewWillEnter
@@ -52,6 +50,9 @@ const Summary: React.FC = () => {
     const [lonDest, setLonDest] = useState(0);
     const [locality, setLocality] = useState("");
 
+    const [altitudes, setAltitudes] = useState<number[]>([]);
+
+
     // Time states
     const [totalTime, setTotalTime] = useState(0);
     const [startTime, setStartTime] = useState(0);
@@ -60,6 +61,8 @@ const Summary: React.FC = () => {
     // Distance and Speed
     const [totalDistance, setTotalDistance] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
+
+    let type;
 
 
     let totalActivityTime;
@@ -83,6 +86,7 @@ const Summary: React.FC = () => {
         totalActivityTime = history.location.state.totalTime
         setTotalTime(totalActivityTime)
         saveInformation(history.location.state);
+        setActivityType(history.location.state.type);
 
         // Time
         // @ts-ignore
@@ -118,6 +122,7 @@ const Summary: React.FC = () => {
      */
     const calculateMapPositions = (activityInstance: { locations: string | any[]; }) => {
         let positionArray = [];
+        let altitudeArray = [];
 
         for (let i = 0; i < activityInstance.locations.length; i++) {
             if (i === 0) {
@@ -130,8 +135,11 @@ const Summary: React.FC = () => {
                 }
             }
             positionArray.push(latLng(activityInstance.locations[i].latitude, activityInstance.locations[i].longitude));
+
+            altitudeArray.push(activityInstance.locations[i].altitude);
         }
         setPositions(positionArray);
+        setAltitudes(altitudeArray);
     }
 
     /**
@@ -144,7 +152,7 @@ const Summary: React.FC = () => {
         // Retrieve geocode string from lat/long locations
         NativeGeocoder.reverseGeocode(activityInstance.locations[0].latitude, activityInstance.locations[0].longitude, options)
             .then((result: NativeGeocoderResult[]) => setLocality(result[0].subLocality + ", " + result[0].locality))
-            .catch((error: any) => console.log(error));
+            .catch((error: any) => console.log("Geocode is only supported on Android and iOS"));
     }
 
     return (
@@ -181,7 +189,7 @@ const Summary: React.FC = () => {
 
                 <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
                              averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
-                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}/>
+                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} type={activityType}/>
 
 
             </IonContent>

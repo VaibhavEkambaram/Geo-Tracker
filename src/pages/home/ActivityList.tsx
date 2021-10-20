@@ -9,6 +9,7 @@ import {add, walk} from 'ionicons/icons';
 import {useHistory} from "react-router-dom";
 import {Storage} from "@ionic/storage";
 import React, {useState} from "react";
+import {TimerView} from "../../components/TimerView";
 
 
 const ActivityList: React.FC = () => {
@@ -56,7 +57,7 @@ const ActivityList: React.FC = () => {
 
                 <IonList>
                 {
-                    entities?.flatMap(({index, totalTime, startingTime, endingTime, key}) => {
+                    entities?.flatMap(({totalTime, startingTime, key, type}) => {
 
 
                         return (
@@ -70,14 +71,7 @@ const ActivityList: React.FC = () => {
                                 })
                             }}>
 
-
-                                <IonItem>
-                                    <IonCardTitle>{('0' + Math.floor((totalTime / (1000 * 60 * 60)) % 24)).slice(-2)}
-                                        :{('0' + Math.floor(totalTime / 6000)).slice(-2)}
-                                        :{('0' + Math.floor((totalTime / 100) % 60)).slice(-2)}
-                                        :{('0' + Math.floor(totalTime % 100)).slice(-2)}</IonCardTitle>
-                                    <IonIcon slot="end" icon={walk}/>
-                                </IonItem>
+                                <TimerView totalTime={totalTime} type={type}/>
                                 <IonItem>
                                     <IonCardSubtitle>{new Date(startingTime).toLocaleString()}</IonCardSubtitle>
                                 </IonItem>

@@ -3,8 +3,7 @@ import {
     IonCardHeader,
     IonCardSubtitle, IonCardTitle,
     IonContent,
-    IonHeader, IonLabel,
-    IonPage, IonText,
+    IonHeader, IonPage, IonText,
     IonTitle,
     IonToolbar
 } from '@ionic/react';
@@ -33,8 +32,8 @@ const Settings: React.FC = () => {
                     </IonCardHeader>
                     <IonCardContent>
                         <IonText color="danger"><i>Cordova Libraries Used:</i></IonText>
-                        <IonText><br/>- Android Permissions<br/>- Device Motion<br/>- Geolocation<br/>- Geocoder<br/>- Insomnia<br/>- Native Storage
-                        </IonText>
+                        <IonText><br/>- Android Permissions<br/>- Geolocation<br/>- Geocoder<br/>- Insomnia<br/>- Native Storage
+                        </IonText>a
                         <br/>
                         <IonText color="danger"><i>External Components Used:</i></IonText>
                         <br/>

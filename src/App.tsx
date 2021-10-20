@@ -9,7 +9,7 @@ import {
   IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import {analytics, body, ellipse, settings, square, triangle, walk} from 'ionicons/icons';
+import {analytics, body, settings} from 'ionicons/icons';
 
 
 import Dashboard from './pages/home/Dashboard';
@@ -39,6 +39,7 @@ import StartRecording from './pages/recording/StartRecording';
 import ActiveRecording from './pages/recording/ActiveRecording';
 import Summary from './pages/recording/Summary';
 import ActivityView from './pages/list/ActivityView';
+import React from "react";
 
 const App: React.FC = () => (
   <IonApp>

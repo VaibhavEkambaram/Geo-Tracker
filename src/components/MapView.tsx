@@ -1,7 +1,6 @@
-import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon} from "@ionic/react";
-import {MapContainer, Marker, Polyline, Popup, TileLayer, useMap} from "react-leaflet";
+import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle} from "@ionic/react";
+import {MapContainer, Marker, Polyline, Popup, TileLayer} from "react-leaflet";
 import React from "react";
-import {arrowBack} from "ionicons/icons";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {Icon} from 'leaflet'
 

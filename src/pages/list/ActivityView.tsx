@@ -2,12 +2,10 @@ import {
     IonButton,
     IonCard,
     IonCardContent,
-    IonCardHeader, IonCardSubtitle,
-    IonCardTitle,
+    IonCardHeader, IonCardTitle,
     IonContent,
     IonHeader,
-    IonIcon, IonLabel,
-    IonPage,
+    IonIcon, IonPage,
     IonTitle,
     IonToolbar, useIonAlert, useIonViewWillEnter
 } from '@ionic/react';
@@ -16,9 +14,7 @@ import {arrowBack} from "ionicons/icons";
 import React, {useState} from "react";
 import {LatLng, latLng} from "leaflet";
 import {Storage} from "@ionic/storage";
-import {MapView} from "../../components/MapView";
 import {NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions} from '@ionic-native/native-geocoder';
-import {TimerView} from "../../components/TimerView";
 import TimeToSeconds from '../../util/TimeToSeconds';
 import {SummaryView} from '../../components/SummaryView';
 
@@ -39,6 +35,8 @@ const ActivityView: React.FC = () => {
 
     // Positions states
     const [positions, setPositions] = useState<LatLng[]>([]);
+    const [altitudes, setAltitudes] = useState<number[]>([]);
+
     const [latOrigin, setLatOrigin] = useState(0);
     const [lonOrigin, setLonOrigin] = useState(0);
     const [latDest, setLatDest] = useState(0);
@@ -89,6 +87,7 @@ const ActivityView: React.FC = () => {
         setStartTime(new Date(arr[index].startingTime).toLocaleString());
         setEndTime(new Date(arr[index].endingTime).toLocaleString());
         setTotalTime(arr[index].totalTime);
+        setActivityType(arr[index].type);
 
         // Speed and Distance
         setTotalDistance(arr[index].totalDistance);
@@ -115,6 +114,7 @@ const ActivityView: React.FC = () => {
      */
     const calculateMapPositions = (activityInstance: { locations: string | any[]; }) => {
         let positionArray = [];
+        let altitudeArray = [];
 
         for (let i = 0; i < activityInstance.locations.length; i++) {
             if (i === 0) {
@@ -126,10 +126,12 @@ const ActivityView: React.FC = () => {
                     setLonDest(activityInstance.locations[i].longitude)
                 }
             }
-            console.log(activityInstance.locations[i].altitude)
             positionArray.push(latLng(activityInstance.locations[i].latitude, activityInstance.locations[i].longitude));
+
+            altitudeArray.push(activityInstance.locations[i].altitude);
         }
         setPositions(positionArray);
+        setAltitudes(altitudeArray);
     }
 
     /**
@@ -142,7 +144,7 @@ const ActivityView: React.FC = () => {
         // Retrieve geocode string from lat/long locations
         NativeGeocoder.reverseGeocode(activityInstance.locations[0].latitude, activityInstance.locations[0].longitude, options)
             .then((result: NativeGeocoderResult[]) => setLocality(result[0].subLocality + ", " + result[0].locality))
-            .catch((error: any) => console.log(error));
+            .catch((error: any) => console.log("Geocode is only supported on Android and iOS"));
     }
 
     /**
@@ -158,7 +160,7 @@ const ActivityView: React.FC = () => {
                 ' After deletion, you will be returned to the My Activities Screen',
             buttons: [
                 'Cancel',
-                {text: 'Delete', handler: (d) => executeDelete(key, e)},
+                {text: 'Delete', handler: () => executeDelete(key, e)},
             ],
         })
     }
@@ -221,7 +223,7 @@ const ActivityView: React.FC = () => {
 
                 <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
                              averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
-                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}/>
+                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} type={activityType}/>
 
 
                 <IonCard>

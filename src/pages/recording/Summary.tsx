@@ -49,9 +49,7 @@ const Summary: React.FC = () => {
     const [latDest, setLatDest] = useState(0);
     const [lonDest, setLonDest] = useState(0);
     const [locality, setLocality] = useState("");
-
     const [altitudes, setAltitudes] = useState<number[]>([]);
-
 
     // Time states
     const [totalTime, setTotalTime] = useState(0);
@@ -189,7 +187,8 @@ const Summary: React.FC = () => {
 
                 <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
                              averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
-                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} type={activityType}/>
+                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}
+                             altitudes={altitudes} type={activityType}/>
 
 
             </IonContent>

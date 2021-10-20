@@ -22,7 +22,6 @@ export const TimerComponent = (props: {totalTime: number}) => {
 /**
  * Timer View Card. This includes the timer itself, as well as an icon to identify the activity.
  * @param props time number, type string
- * @constructor
  */
 export function TimerView(props: { totalTime: number,type: string }) {
     let {totalTime, type} = props;
@@ -59,7 +58,7 @@ export function TimerView(props: { totalTime: number,type: string }) {
                 <IonIcon slot="end" icon={bicycle}/>
             </IonItem>
         );
-    // Otherwise, if no valid types are inputted, just return null.     
+    // Otherwise, if no valid types are inputted, just return null.
     } else {
         return null;
     }

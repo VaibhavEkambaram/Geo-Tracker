@@ -27,19 +27,16 @@ const Settings: React.FC = () => {
 
                 <IonCard>
                     <IonCardHeader>
+                        <IonCardTitle>Data</IonCardTitle>
+                        <IonCardSubtitle color="primary">Geo Tracker Version "TEST"</IonCardSubtitle>
+                    </IonCardHeader>
+                </IonCard>
+
+                <IonCard>
+                    <IonCardHeader>
                         <IonCardTitle>About</IonCardTitle>
                         <IonCardSubtitle color="primary">Geo Tracker Version "TEST"</IonCardSubtitle>
                     </IonCardHeader>
-                    <IonCardContent>
-                        <IonText color="danger"><i>Cordova Libraries Used:</i></IonText>
-                        <IonText><br/>- Android Permissions<br/>- Geolocation<br/>- Geocoder<br/>- Insomnia<br/>- Native Storage
-                        </IonText>a
-                        <br/>
-                        <IonText color="danger"><i>External Components Used:</i></IonText>
-                        <br/>
-                        <IonText>OpenStreetMap with React Leaflet</IonText>
-
-                    </IonCardContent>
                 </IonCard>
 
 

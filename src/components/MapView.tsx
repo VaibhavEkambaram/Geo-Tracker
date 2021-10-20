@@ -23,7 +23,7 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                         } style={{height: "100%", width: "100%"}} center={[lat, lon]} zoom={50}
                                       scrollWheelZoom={false}>
                             <TileLayer
-                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
                             <Polyline color={'blue'} positions={positions}/>
@@ -53,7 +53,7 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                         } style={{height: "100%", width: "100%"}} center={[lat, lon]} zoom={50}
                                       scrollWheelZoom={false}>
                             <TileLayer
-                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
                             <Polyline color={'blue'} positions={positions}/>
@@ -91,7 +91,7 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                             } style={{height: "100%", width: "100%"}} center={[lat, lon]} zoom={50}
                                           scrollWheelZoom={false}>
                                 <TileLayer
-                                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                    attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                 />
                             </MapContainer>
@@ -101,11 +101,7 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
             } else {
                 return null;
             }
-
-
         }
-
-
     }
 }
 

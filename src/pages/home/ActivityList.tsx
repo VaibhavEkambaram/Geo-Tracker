@@ -18,7 +18,6 @@ const ActivityList: React.FC = () => {
 
     const [entities, setEntities] = useState([]);
 
-
     useIonViewWillEnter(() => {
         makeStorage(store);
     });
@@ -29,7 +28,6 @@ const ActivityList: React.FC = () => {
         let arr = JSON.parse(name)
         setEntities(arr);
     }
-
 
 
     return (
@@ -56,33 +54,29 @@ const ActivityList: React.FC = () => {
                 </IonFab>
 
                 <IonList>
-                {
-                    entities?.flatMap(({totalTime, startingTime, key, type}) => {
+                    {
+                        entities?.flatMap(({totalTime, startingTime, key, type}) => {
 
 
-                        return (
+                            return (
 
-                            <IonCard key={key} onClick={(e) => {
-                                e.preventDefault();
-                                history.push({
-                                    pathname: '/ActivityView',
-                                    state: key,
+                                <IonCard key={key} onClick={(e) => {
+                                    e.preventDefault();
+                                    history.push({
+                                        pathname: '/ActivityView',
+                                        state: key,
+                                    })
+                                }}>
 
-                                })
-                            }}>
-
-                                <TimerView totalTime={totalTime} type={type}/>
-                                <IonItem>
-                                    <IonCardSubtitle>{new Date(startingTime).toLocaleString()}</IonCardSubtitle>
-                                </IonItem>
-                            </IonCard>
-
-                        )
-                    })
-                }
+                                    <TimerView totalTime={totalTime} type={type}/>
+                                    <IonItem>
+                                        <IonCardSubtitle>{new Date(startingTime).toLocaleString()}</IonCardSubtitle>
+                                    </IonItem>
+                                </IonCard>
+                            )
+                        })
+                    }
                 </IonList>
-
-
             </IonContent>
         </IonPage>
     );

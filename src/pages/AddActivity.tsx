@@ -1,17 +1,6 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
-import {
-    IonButton,
-    IonCard,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonIcon,
-    IonItem,
-    IonPage,
-    IonTitle,
-    IonToolbar
-} from '@ionic/react';
+import {IonButton, IonCard, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonPage, IonTitle, IonToolbar} from '@ionic/react';
 import {arrowBack, bicycle, colorWand, pulse, walk} from "ionicons/icons";
 
 /**

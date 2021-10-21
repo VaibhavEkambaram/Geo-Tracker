@@ -1,18 +1,4 @@
-import {
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonIcon,
-    IonPage,
-    IonProgressBar,
-    IonTitle,
-    IonToolbar,
-    useIonViewWillEnter
-} from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonPage, IonProgressBar, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
 import {arrowBack} from "ionicons/icons";
@@ -56,6 +42,7 @@ const StartRecording: React.FC = () => {
 
     return (
         <IonPage>
+            {/* Header and Back Button */}
             <IonHeader>
                 <IonToolbar>
                     <IonTitle>Start Recording</IonTitle>
@@ -73,7 +60,7 @@ const StartRecording: React.FC = () => {
                         <IonTitle size="large">Start Recording</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-
+                {/* Main Info Card Button */}
                 <IonCard>
                     <IonCardContent>
                         <IonCardTitle>Click the button below to begin recording.</IonCardTitle>
@@ -82,6 +69,7 @@ const StartRecording: React.FC = () => {
                         <IonCardSubtitle>Your Selected Activity: {activityType}</IonCardSubtitle>
 
                         <br/>
+                        {/* Progress Bar */}
                         <IonProgressBar value={startProgressBar}/><br/>
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();
@@ -89,7 +77,7 @@ const StartRecording: React.FC = () => {
                         }}>Start Recording Activity</IonButton>
                     </IonCardContent>
                 </IonCard>
-
+                {/* Advisory Notice */}
                 <IonCard>
                     <IonCardContent>
                         <IonCardSubtitle>If you would like to change your activity selection, then please use the back

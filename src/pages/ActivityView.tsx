@@ -1,22 +1,12 @@
-import {
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader, IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonIcon, IonPage,
-    IonTitle,
-    IonToolbar, useIonAlert, useIonViewWillEnter
-} from '@ionic/react';
+import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, useIonViewWillEnter, useIonAlert} from '@ionic/react';
 import {useHistory} from "react-router-dom";
 import {arrowBack} from "ionicons/icons";
 import React, {useState} from "react";
 import {LatLng, latLng} from "leaflet";
 import {Storage} from "@ionic/storage";
 import {NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions} from '@ionic-native/native-geocoder';
-import TimeToSeconds from '../../util/TimeToSeconds';
-import {SummaryView} from '../../components/SummaryView';
+import TimeToSeconds from '../utils/TimeToSeconds';
+import {SummaryView} from '../components/SummaryView';
 
 /**
  * Shows Information about an Activity
@@ -220,12 +210,12 @@ const ActivityView: React.FC = () => {
                         <IonTitle size="large">View Activity</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-
+                {/* Defer to summary view and pass on data */}
                 <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
                              averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
                              lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} type={activityType}/>
 
-
+                {/* Delete activity card */}
                 <IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Actions</IonCardTitle>
@@ -234,8 +224,6 @@ const ActivityView: React.FC = () => {
                         <IonButton expand="block" onClick={(e) => {
                             deleteThisActivity(key, e)
                         }}>Delete Activity</IonButton>
-
-
                     </IonCardContent>
                 </IonCard>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {IonApp} from '@ionic/react';
-
+import {RouterController} from "./models/RouterController";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -19,13 +19,16 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
-import './theme/variables.css';
+import './theme/Themes.css';
 
-import {RouterController} from "./models/RouterController";
-
+/**
+ * Main Insertion Point for the Application.
+ * From here the router controller is called, which sets up the various screens for the app.
+ */
 const App: React.FC = () => (
   <IonApp>
-    <RouterController/>
+      {/* Call Router Navigation Controller */}
+      <RouterController/>
   </IonApp>
 );
 

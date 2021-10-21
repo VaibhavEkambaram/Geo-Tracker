@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "assignment3",
+	"appId": "io.ekambavaib.geotracker",
+	"appName": "geotracker",
 	"webDir": "build",
 	"bundledWebRuntime": false
 }

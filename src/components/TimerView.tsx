@@ -6,7 +6,7 @@ import {bicycle, colorWand, pulse, walk} from "ionicons/icons";
  * Secondary Timer Component, Just for Displaying the Clock View.
  * @param props time number
  */
-export const TimerComponent = (props: {totalTime: number}) => {
+export const TimerComponent = (props: { totalTime: number }) => {
     let {totalTime} = props; // Get totalTime Drop
 
     return (
@@ -23,42 +23,42 @@ export const TimerComponent = (props: {totalTime: number}) => {
  * Timer View Card. This includes the timer itself, as well as an icon to identify the activity.
  * @param props time number, type string
  */
-export function TimerView(props: { totalTime: number,type: string }) {
+export function TimerView(props: { totalTime: number, type: string }) {
     let {totalTime, type} = props;
 
     // If auto detect type use the wand icon and add timer
-    if(type==="Auto Detect") {
+    if (type === "Auto Detect") {
         return (
             <IonItem>
                 <TimerComponent totalTime={totalTime}/>
                 <IonIcon slot="end" icon={colorWand}/>
             </IonItem>
         );
-    // If walking type then use the walking icon and add timer
-    } else if(type==="Walking") {
+        // If walking type then use the walking icon and add timer
+    } else if (type === "Walking") {
         return (
             <IonItem>
                 <TimerComponent totalTime={totalTime}/>
                 <IonIcon slot="end" icon={walk}/>
             </IonItem>
         );
-    // If running type then use the pulse icon and add timer
-    } else if(type==="Running"){
+        // If running type then use the pulse icon and add timer
+    } else if (type === "Running") {
         return (
             <IonItem>
                 <TimerComponent totalTime={totalTime}/>
                 <IonIcon slot="end" icon={pulse}/>
             </IonItem>
         );
-    // If cycling type then use the bicycle icon and add timer
-    } else if(type==="Cycling"){
+        // If cycling type then use the bicycle icon and add timer
+    } else if (type === "Cycling") {
         return (
             <IonItem>
                 <TimerComponent totalTime={totalTime}/>
                 <IonIcon slot="end" icon={bicycle}/>
             </IonItem>
         );
-    // Otherwise, if no valid types are inputted, just return null.
+        // Otherwise, if no valid types are inputted, just return null.
     } else {
         return null;
     }

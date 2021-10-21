@@ -5,7 +5,8 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonContent,
-    IonHeader, IonPage,
+    IonHeader,
+    IonPage,
     IonTitle,
     IonToolbar,
     useIonViewWillEnter
@@ -15,26 +16,9 @@ import React, {useState} from "react";
 import {Storage} from "@ionic/storage";
 import {LatLng, latLng} from "leaflet";
 import {NativeGeocoder, NativeGeocoderOptions, NativeGeocoderResult} from "@ionic-native/native-geocoder";
-import TimeToSeconds from "../../util/TimeToSeconds";
-import {SummaryView} from "../../components/SummaryView";
-
-interface ActivityInformation {
-    index: number;
-    key: number;
-    startingTime: string,
-    endingTime: string;
-    totalTime: number;
-    totalDistance: number;
-    type: string,
-    locations: LocationSnippet[];
-}
-
-
-interface LocationSnippet {
-    latitude: number;
-    longitude: number;
-    altitude: number;
-}
+import TimeToSeconds from "../utils/TimeToSeconds";
+import {SummaryView} from "../components/SummaryView";
+import {ActivityInformation} from "../models/ActivityInterface";
 
 const Summary: React.FC = () => {
     let history = useHistory<ActivityInformation>();
@@ -60,9 +44,6 @@ const Summary: React.FC = () => {
     const [totalDistance, setTotalDistance] = useState(0);
     const [averageSpeed, setAverageSpeed] = useState(0);
 
-    let type;
-
-
     let totalActivityTime;
     const saveInformation = async (activityToBeAdded: ActivityInformation) => {
         const store = new Storage();
@@ -81,6 +62,9 @@ const Summary: React.FC = () => {
     }
 
     useIonViewWillEnter(() => {
+        setLatOrigin(0);
+        setLonOrigin(0);
+
         totalActivityTime = history.location.state.totalTime
         setTotalTime(totalActivityTime)
         saveInformation(history.location.state);
@@ -166,7 +150,7 @@ const Summary: React.FC = () => {
                         <IonTitle size="large">Summary</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-
+                {/* Save or discard card */}
                 <IonCard>
                     <IonCardHeader>
                         <IonCardTitle>Actions</IonCardTitle>
@@ -175,22 +159,19 @@ const Summary: React.FC = () => {
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();
                             executeSave();
-                            history.push("/tab2");
+                            history.push("/activitylist");
                         }}>Save Activity</IonButton>
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();
-                            history.push("/tab1");
+                            history.push("/dashboard");
                         }}>Discard Activity</IonButton>
                     </IonCardContent>
                 </IonCard>
-
-
+                {/* Defer to summary view by passing down information */}
                 <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
                              averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
                              lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}
                              altitudes={altitudes} type={activityType}/>
-
-
             </IonContent>
         </IonPage>
     );

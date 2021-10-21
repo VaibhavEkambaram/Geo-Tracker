@@ -4,11 +4,16 @@ import React from "react";
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {Icon} from 'leaflet'
 
+/**
+ * MapView with React Leaflet and OpenStreetMap. Geolocation is also used here to show the general location.
+ * Depending on the conditions, varying numbers of markers and route lines are drawn.
+ */
 export class MapView extends React.Component<{ positions: any, lat: number, lon: number, latDest: number, lonDest: number, locality: string }> {
     render() {
         let {positions, lat, lon, locality, latDest, lonDest} = this.props;
 
-        if (lat !== 0 && lon !== 0 && ((latDest === 0 && lonDest === 0) || (lat===latDest && lon===lonDest) )) {
+        // If only one location is present then only show a starting marker
+        if (lat !== 0 && lon !== 0 && ((latDest === 0 && lonDest === 0) || (lat === latDest && lon === lonDest))) {
             return (
                 <IonCard>
                     <IonCardHeader>
@@ -26,7 +31,11 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                                 attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
+
+                            {/* Show Route Lines */}
                             <Polyline color={'blue'} positions={positions}/>
+
+                            {/* Show Start Marker Only */}
                             <Marker position={[lat, lon]}
                                     icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})}>
                                 <Popup>
@@ -38,6 +47,7 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                 </IonCard>
 
             )
+            // If more than one locations are present then show a start and ending marker
         } else if (lat !== 0 && lon !== 0 && latDest !== 0 && lonDest !== 0) {
             return (
                 <IonCard>
@@ -56,7 +66,11 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                                 attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
+
+                            {/* Show Route Lines */}
                             <Polyline color={'blue'} positions={positions}/>
+
+                            {/* Show Start and Ending Markers */}
                             <Marker position={[lat, lon]}
                                     icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})}>
                                 <Popup>
@@ -72,36 +86,9 @@ export class MapView extends React.Component<{ positions: any, lat: number, lon:
                         </MapContainer>
                     </IonCardContent>
                 </IonCard>
-
             )
-        } else {
-
-            if(locality==="none"){
-                console.log("this one + " +  lat + " " + lon);
-                return (
-                    <IonCard>
-                        <IonCardHeader>
-                            <IonCardTitle>Map</IonCardTitle>
-                        </IonCardHeader>
-                        <IonCardContent style={{height: "50vh", paddingInlineEnd: "3vw"}}>
-                            <MapContainer whenCreated={(map) =>
-                                setInterval(() => {
-                                    map.invalidateSize();
-                                }, 0)
-                            } style={{height: "100%", width: "100%"}} center={[lat, lon]} zoom={50}
-                                          scrollWheelZoom={false}>
-                                <TileLayer
-                                    attribution={' <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'}
-                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                />
-                            </MapContainer>
-                        </IonCardContent>
-                    </IonCard>
-                );
-            } else {
-                return null;
-            }
         }
+        return null;
     }
 }
 

@@ -4,46 +4,38 @@ import {MapView} from "./MapView";
 import React, {Fragment} from "react";
 import {Line} from 'react-chartjs-2';
 
-
+/**
+ * Activity Summary View.
+ * This is shown when viewing the summary screen, or when viewing an individual activity.
+ * @param props properties inherited from the summary or view screens
+ */
 export function SummaryView(props: { totalTime: any, startTime: any, endTime: any, totalDistance: any, averageSpeed: any, positions: any, latOrigin: any, lonOrigin: any, latDest: any, lonDest: any, locality: any, altitudes: any, type: any }) {
-    let {
-        totalTime,
-        startTime,
-        endTime,
-        totalDistance,
-        averageSpeed,
-        positions,
-        latOrigin,
-        lonOrigin,
-        latDest,
-        lonDest,
-        locality,
-        altitudes,
-        type,
-    } = props;
+    let {totalTime, startTime, endTime, totalDistance, averageSpeed, positions, latOrigin, lonOrigin, latDest, lonDest, locality, altitudes, type,} = props;
 
-
+    // Compute the number of labels required for the altitude bar chart
     let altitudeLabels = [];
     for (let i = 0; i <= altitudes.length; i++) {
         altitudeLabels.push(i);
     }
 
+    // Information for the altitude bar chart
     const barChartData = {
         labels: altitudeLabels,
         datasets: [
             {
                 label: 'Altitude',
-                backgroundColor: 'rgba(255,99,132,0.2)',
-                borderColor: 'rgba(255,99,132,1)',
-                borderWidth: 1,
-                hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                hoverBorderColor: 'rgba(255,99,132,1)',
+                backgroundColor: 'rgba(139,195,74,1)',
+                borderColor: 'rgba(139,195,74,1)',
+                borderWidth: 3,
+                hoverBackgroundColor: 'rgba(139,195,74,1)',
+                hoverBorderColor: 'rgba(139,195,74,1)',
                 data: altitudes,
             }
         ]
     };
     return (
         <Fragment>
+            {/* Time Card */}
             <IonCard>
                 <IonCardHeader>
                     <IonCardSubtitle>Total Time:</IonCardSubtitle>
@@ -56,6 +48,7 @@ export function SummaryView(props: { totalTime: any, startTime: any, endTime: an
                 </IonCardContent>
             </IonCard>
 
+            {/* Distance and Speed Card */}
             <IonCard>
                 <IonCardHeader>
                     <IonCardSubtitle>Total Distance:</IonCardSubtitle>
@@ -68,10 +61,11 @@ export function SummaryView(props: { totalTime: any, startTime: any, endTime: an
                 </IonCardContent>
             </IonCard>
 
-
+            {/* Map */}
             <MapView positions={positions} lat={latOrigin} lon={lonOrigin} latDest={latDest} lonDest={lonDest}
                      locality={locality}/>
 
+            {/* Altitude Line Chart */}
             <IonCard>
                 <IonCardHeader>
                     <IonCardTitle>Altitude</IonCardTitle>

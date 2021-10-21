@@ -1,118 +1,95 @@
 import React, {useState} from "react";
-import {
-    AlertButton,
-    AlertOptions, IonBadge,
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonContent,
-    IonHeader, IonPage,
-    IonTitle,
-    IonToolbar,
-    useIonAlert,
-    useIonViewWillEnter
-} from '@ionic/react';
+import {IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
 import {useHistory} from "react-router-dom";
 import {Storage} from '@ionic/storage';
-import {HookOverlayOptions} from '@ionic/react/dist/types/hooks/HookOverlayOptions';
-import {LastActivity} from "../../components/LastActivity";
+import {LastActivity} from "../components/LastActivity";
 
-
+/**
+ * Dashboard - This is the main home screen for the app. Shows basic trends stats and most recent activity.
+ */
 const Dashboard: React.FC = () => {
     let history = useHistory();
     const store = new Storage();
 
-    const [present] = useIonAlert();
-
-
+    // Array of the currently stored entities
     const [entities, setEntities] = useState([]);
+
+    // Trends stats
     const [trendsTime, setTrendsTime] = useState(0);
     const [trendsDistance, setTrendsDistance] = useState(0);
     const [dailyTime, setDailyTime] = useState(0);
     const [dailyDistance, setDailyDistance] = useState(0);
 
-
-
+    /**
+     * On entering the page perform a storage check to make sure the filesystem has been set up
+     */
     useIonViewWillEnter(() => {
-        initialStorageCheck(store, present);
+        initialStorageCheck(store);
     });
 
-    const initialStorageCheck = async (store: Storage, present: { (message: string, buttons?: AlertButton[] | undefined): void; (options: AlertOptions & HookOverlayOptions): void; (arg0: { cssClass: string; header: string; message: string; buttons: (string | { text: string; handler: (d: any) => void; })[]; onDidDismiss: (e: any) => void; }): void; }) => {
+    /**
+     * Perform a storage check, setup the filesystem if not done already, then assign the entities accordingly
+     * @param store
+     */
+    const initialStorageCheck = async (store: Storage) => {
         await store.create();
 
         let arrayFromStorage = await store.get("storedActivities");
 
         if (arrayFromStorage === null) {
             arrayFromStorage = await store.set('storedActivities', "[]");
-
-            present({
-                header: 'Welcome to Assignment 3!',
-                message: 'This application makes use of your devices GPS to record your activities. This data is only used when actively recording. Permission to read and write data to your device is also required in order to store activity information.',
-                buttons: [
-                    {text: 'Ok'},
-                ],
-            })
         }
         let arrayParsed = JSON.parse(arrayFromStorage);
-
         calculateTrends(arrayParsed);
-
-
         setEntities(arrayParsed);
-
     }
 
+    /**
+     * Compute trends using the currently available data.
+     * @param arrayParsed parsed activities array
+     */
     const calculateTrends = (arrayParsed: any[]) => {
 
+        // Variables to assign
         let cumulativeTime = 0;
         let cumulativeDistance = 0;
-
         let dailyTime = 0;
         let dailyDistance = 0;
 
+        // Get current date
         let currentDate = new Date();
 
+        // Loop through all activity records
         for (let i = 0; i < arrayParsed.length; i++) {
+            // Add to total time and distance
             cumulativeTime += arrayParsed[i].totalTime;
             cumulativeDistance += arrayParsed[i].totalDistance;
 
-
+            // Check if the date of the entry is the same as the current one
             let isSameDate = true;
-
-
-            if (new Date(arrayParsed[i].startingTime).getDate() !== currentDate.getDate()) {
-                isSameDate = false;
-            }
-
-            if (new Date(arrayParsed[i].startingTime).getMonth() !== currentDate.getMonth()) {
-                isSameDate = false;
-            }
-
-
-            if (new Date(arrayParsed[i].startingTime).getFullYear() !== currentDate.getFullYear()) {
-                isSameDate = false;
-            }
+            if (new Date(arrayParsed[i].startingTime).getDate() !== currentDate.getDate()) isSameDate = false;
+            if (new Date(arrayParsed[i].startingTime).getMonth() !== currentDate.getMonth()) isSameDate = false;
+            if (new Date(arrayParsed[i].startingTime).getFullYear() !== currentDate.getFullYear()) isSameDate = false;
 
             if(isSameDate){
+                // if same date then add to the time and distance
                 dailyTime += arrayParsed[i].totalTime;
                 dailyDistance += arrayParsed[i].totalDistance;
             }
         }
 
+        // Set states
         setTrendsTime(cumulativeTime);
         setTrendsDistance(cumulativeDistance);
         setDailyTime(dailyTime);
         setDailyDistance(dailyDistance);
-
     }
 
 
     return (
         <IonPage>
             <IonHeader>
+                {/* Header */}
                 <IonToolbar>
                     <IonTitle>Dashboard</IonTitle>
                 </IonToolbar>
@@ -124,20 +101,22 @@ const Dashboard: React.FC = () => {
                     </IonToolbar>
                 </IonHeader>
                 <IonCard>
+                    {/* Today Trends View */}
                     <IonCardHeader>
                         <IonCardTitle>Today</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
                         <IonBadge>
-                            Activity Time Today: {('0' + Math.floor((trendsTime / (1000 * 60 * 60)) % 24)).slice(-2)}
-                            :{('0' + Math.floor(trendsTime / 6000)).slice(-2)}
-                            :{('0' + Math.floor((trendsTime / 100) % 60)).slice(-2)}
-                            :{('0' + Math.floor(trendsTime % 100)).slice(-2)}</IonBadge><br/>
+                            Activity Time Today: {('0' + Math.floor((dailyTime / (1000 * 60 * 60)) % 24)).slice(-2)}
+                            :{('0' + Math.floor(dailyTime / 6000)).slice(-2)}
+                            :{('0' + Math.floor((dailyTime / 100) % 60)).slice(-2)}
+                            :{('0' + Math.floor(dailyTime % 100)).slice(-2)}</IonBadge><br/>
                         <IonBadge>Distance Covered Today: {Math.round(dailyDistance * 100) / 100} m</IonBadge>
                     </IonCardContent>
                 </IonCard>
 
                 <IonCard>
+                    {/* Overall Trends View */}
                     <IonCardHeader>
                         <IonCardTitle>Trends</IonCardTitle>
                     </IonCardHeader>
@@ -157,9 +136,11 @@ const Dashboard: React.FC = () => {
                         <IonCardTitle>Activities</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
+                        {/* Most Recent Activity */}
                         <IonCardSubtitle>Last Activity</IonCardSubtitle>
 
                         <LastActivity entities={entities}/>
+                        {/* Most Recent Activity */}
 
                         <IonButton expand="block" onClick={(e) => {
                             e.preventDefault();

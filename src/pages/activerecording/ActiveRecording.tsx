@@ -1,15 +1,17 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter, IonCardSubtitle, useIonViewDidLeave} from '@ionic/react';
+import {
+    useIonViewWillEnter,
+    useIonViewDidLeave
+} from '@ionic/react';
 import {useHistory} from "react-router-dom";
 import React, {useEffect, useState} from 'react';
 import {interval, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {Geolocation} from '@ionic-native/geolocation';
 import {Insomnia} from '@ionic-native/insomnia';
-import {TimerView} from "../components/TimerView";
-import TimeToSeconds from '../utils/TimeToSeconds';
-import {LocationInterface} from "../models/LocationInterface";
-import {ActivityInformation} from "../models/ActivityInterface";
-import CalculateLocationDistance from "../utils/CalculateLocationDistance";
+import TimeToSeconds from '../../utils/TimeToSeconds';
+import {LocationInterface} from "../../models/LocationInterface";
+import CalculateLocationDistance from "../../utils/CalculateLocationDistance";
+import {ActiveRecordingView} from "./ActiveRecordingView";
 
 /**
  * Record Activity Screen.
@@ -162,75 +164,10 @@ const ActiveRecording: React.FC = () => {
     }
 
     return (
-        <IonPage>
-            {/* Header and Back Button */}
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Active Recording</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent fullscreen>
-                <IonHeader collapse="condense">
-                    <IonToolbar>
-                        <IonTitle size="large">Recording</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                {/* Total Elapsed Time and Activity Type */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardSubtitle>Total Elapsed Time:</IonCardSubtitle>
-                        <TimerView totalTime={time} type={type}/>
-                    </IonCardHeader>
-                </IonCard>
-                {/* Location Card */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Location</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                        <IonCardSubtitle>Coordinates: {latitude} {longitude}</IonCardSubtitle>
-                        <IonCardSubtitle> Altitude: {altitude}</IonCardSubtitle>
-                        <IonCardSubtitle> Total Distance Covered: {totalDistance} m</IonCardSubtitle>
-                        <IonCardSubtitle> Total Average Speed: {averageSpeed * 3.6} km/h</IonCardSubtitle>
-                    </IonCardContent>
-                </IonCard>
-                {/* Pause and Complete Activity Buttons */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Actions</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                        <IonButton expand="block" onClick={async () => {
-                            handleTimerResume()
-                        }}>Pause/Resume Timer</IonButton>
-                        <IonButton expand="block" onClick={(e) => {
-                            let endDate = new Date().toString();
-                            getLocation();
-                            handleTimerStop();
-                            e.preventDefault();
-                            let epochTime = Date.now();
-
-                            let activityInformation: ActivityInformation = {
-                                index: 0,
-                                key: epochTime,
-                                startingTime: startDate,
-                                endingTime: endDate,
-                                totalTime: time,
-                                totalDistance: totalDistance,
-                                type: type,
-                                locations: locations,
-                            };
-
-                            history.push({
-                                pathname: '/Summary',
-                                state: activityInformation,
-                            })
-                        }}>Complete Activity</IonButton>
-                    </IonCardContent>
-                </IonCard>
-
-            </IonContent>
-        </IonPage>
+        <ActiveRecordingView time={time} type={type} latitude={latitude} longitude={longitude} altitude={altitude}
+                             totalDistance={totalDistance} averageSpeed={averageSpeed}
+                             handleTimerResume={handleTimerResume} getLocation={getLocation}
+                             handleTimerStop={handleTimerStop} startDate={startDate} locations={locations}/>
     );
 };
 

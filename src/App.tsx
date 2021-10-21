@@ -19,7 +19,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Theme variables */
-import './theme/Themes.css';
+import './theme/Theme.css';
 
 /**
  * Main Insertion Point for the Application.

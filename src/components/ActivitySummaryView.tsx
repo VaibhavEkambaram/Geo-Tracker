@@ -9,7 +9,7 @@ import {Line} from 'react-chartjs-2';
  * This is shown when viewing the summary screen, or when viewing an individual activity.
  * @param props properties inherited from the summary or view screens
  */
-export function SummaryView(props: { totalTime: any, startTime: any, endTime: any, totalDistance: any, averageSpeed: any, positions: any, latOrigin: any, lonOrigin: any, latDest: any, lonDest: any, locality: any, altitudes: any, type: any }) {
+export function ActivitySummaryView(props: { totalTime: any, startTime: any, endTime: any, totalDistance: any, averageSpeed: any, positions: any, latOrigin: any, lonOrigin: any, latDest: any, lonDest: any, locality: any, altitudes: any, type: any }) {
     let {totalTime, startTime, endTime, totalDistance, averageSpeed, positions, latOrigin, lonOrigin, latDest, lonDest, locality, altitudes, type,} = props;
 
     // Compute the number of labels required for the altitude bar chart

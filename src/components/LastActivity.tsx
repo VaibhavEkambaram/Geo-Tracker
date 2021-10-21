@@ -18,7 +18,7 @@ export function LastActivity(props: { entities: any }) {
         <IonCard onClick={(e) => {
                 e.preventDefault();
                 history.push({
-                    pathname: '/ActivityView',
+                    pathname: '/Activity',
                     state: entities[0].key,
                 })
             }}>

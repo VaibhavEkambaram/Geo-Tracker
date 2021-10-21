@@ -1,17 +1,7 @@
 import React from "react";
-import {
-    IonButton,
-    IonCard,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar, useIonAlert
-} from '@ionic/react';
+import {useIonAlert} from '@ionic/react';
 import {Storage} from "@ionic/storage";
+import {SettingsView} from "./SettingsView";
 
 /**
  * Settings Screen - I did not really implement much here apart from the delete all activities button and about cards.
@@ -48,44 +38,10 @@ const Settings: React.FC = () => {
 
         // Convert updated array to string and update Ionic storage
         await store.set("storedActivities", "[]");
-
-
     }
 
     return (
-        <IonPage>
-            {/* Header */}
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Settings</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent fullscreen>
-                <IonHeader collapse="condense">
-                    <IonToolbar>
-                        <IonTitle size="large">Settings</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                {/* Data */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Data</IonCardTitle>
-                        <IonButton expand="block" onClick={(e) => {
-                            deleteThisActivity(e)
-                        }}>Delete All Activities</IonButton>
-                    </IonCardHeader>
-                </IonCard>
-                {/* About */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>About</IonCardTitle>
-                        <IonCardSubtitle color="primary">Geo Tracker Version 1.0</IonCardSubtitle>
-                    </IonCardHeader>
-                </IonCard>
-
-
-            </IonContent>
-        </IonPage>
+        <SettingsView deleteThisActivity={deleteThisActivity}/>
     );
 };
 

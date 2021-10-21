@@ -1,18 +1,27 @@
-import {IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, useIonViewWillEnter, useIonAlert} from '@ionic/react';
+import {
+    useIonViewWillEnter,
+    useIonAlert,
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButton,
+    IonIcon, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent
+} from '@ionic/react';
 import {useHistory} from "react-router-dom";
-import {arrowBack} from "ionicons/icons";
 import React, {useState} from "react";
 import {LatLng, latLng} from "leaflet";
 import {Storage} from "@ionic/storage";
 import {NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions} from '@ionic-native/native-geocoder';
-import TimeToSeconds from '../utils/TimeToSeconds';
-import {SummaryView} from '../components/SummaryView';
+import TimeToSeconds from '../../utils/TimeToSeconds';
+import {arrowBack} from "ionicons/icons";
+import {ActivitySummaryView} from "../../components/ActivitySummaryView";
 
 /**
  * Shows Information about an Activity
  * @constructor
  */
-const ActivityView: React.FC = () => {
+const Activity: React.FC = () => {
     // History navigation state
     let history = useHistory();
     // Alert presenter state
@@ -211,9 +220,10 @@ const ActivityView: React.FC = () => {
                     </IonToolbar>
                 </IonHeader>
                 {/* Defer to summary view and pass on data */}
-                <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
-                             averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
-                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} type={activityType}/>
+                <ActivitySummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
+                                     averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
+                                     lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}
+                                     altitudes={altitudes} type={activityType}/>
 
                 {/* Delete activity card */}
                 <IonCard>
@@ -232,4 +242,4 @@ const ActivityView: React.FC = () => {
     );
 };
 
-export default ActivityView;
+export default Activity;

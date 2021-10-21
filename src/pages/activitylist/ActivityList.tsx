@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom";
 import {IonCard, IonCardSubtitle, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonList, IonPage, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
 import {Storage} from "@ionic/storage";
 import {add} from 'ionicons/icons';
-import {TimerView} from "../components/TimerView";
+import {TimerView} from "../../components/TimerView";
 
 /**
  * Activity List - Show saved activities.
@@ -68,7 +68,7 @@ const ActivityList: React.FC = () => {
                                 <IonCard key={key} onClick={(e) => {
                                     e.preventDefault();
                                     history.push({
-                                        pathname: '/ActivityView',
+                                        pathname: '/Activity',
                                         state: key,
                                     })
                                 }}>

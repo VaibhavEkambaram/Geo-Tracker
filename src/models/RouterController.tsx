@@ -1,14 +1,14 @@
 import {IonReactRouter} from "@ionic/react-router";
 import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
 import {Redirect, Route} from "react-router-dom";
-import Dashboard from "../pages/Dashboard";
-import ActivityList from "../pages/ActivityList";
-import Settings from "../pages/Settings";
-import AddActivity from "../pages/AddActivity";
-import StartRecording from "../pages/StartRecording";
-import ActiveRecording from "../pages/ActiveRecording";
-import Summary from "../pages/Summary";
-import ActivityView from "../pages/ActivityView";
+import Dashboard from "../pages/dashboard/Dashboard";
+import ActivityList from "../pages/activitylist/ActivityList";
+import Settings from "../pages/settings/Settings";
+import AddActivity from "../pages/addactivity/AddActivity";
+import StartRecording from "../pages/startrecording/StartRecording";
+import ActiveRecording from "../pages/activerecording/ActiveRecording";
+import Summary from "../pages/summary/Summary";
+import Activity from "../pages/activity/Activity";
 import {analytics, body, settings} from "ionicons/icons";
 import React from "react";
 
@@ -35,7 +35,7 @@ export function RouterController() {
                     {/* Summary */}
                     <Route exact path="/Summary"><Summary/></Route>
                     {/* Activity View */}
-                    <Route exact path="/ActivityView"><ActivityView/></Route>
+                    <Route exact path="/Activity"><Activity/></Route>
                     {/* Default View - This should route to the dashboard */}
                     <Route exact path="/"><Redirect to="/dashboard"/></Route>
                 </IonRouterOutlet>

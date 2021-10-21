@@ -1,14 +1,4 @@
 import {
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar,
     useIonViewWillEnter
 } from '@ionic/react';
 import {useHistory} from "react-router-dom";
@@ -16,9 +6,9 @@ import React, {useState} from "react";
 import {Storage} from "@ionic/storage";
 import {LatLng, latLng} from "leaflet";
 import {NativeGeocoder, NativeGeocoderOptions, NativeGeocoderResult} from "@ionic-native/native-geocoder";
-import TimeToSeconds from "../utils/TimeToSeconds";
-import {SummaryView} from "../components/SummaryView";
-import {ActivityInformation} from "../models/ActivityInterface";
+import TimeToSeconds from "../../utils/TimeToSeconds";
+import {ActivityInformation} from "../../models/ActivityInterface";
+import {SummaryView} from "./SummaryView";
 
 const Summary: React.FC = () => {
     let history = useHistory<ActivityInformation>();
@@ -138,42 +128,7 @@ const Summary: React.FC = () => {
     }
 
     return (
-        <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Summary</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent fullscreen>
-                <IonHeader collapse="condense">
-                    <IonToolbar>
-                        <IonTitle size="large">Summary</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                {/* Save or discard card */}
-                <IonCard>
-                    <IonCardHeader>
-                        <IonCardTitle>Actions</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                        <IonButton expand="block" onClick={(e) => {
-                            e.preventDefault();
-                            executeSave();
-                            history.push("/activitylist");
-                        }}>Save Activity</IonButton>
-                        <IonButton expand="block" onClick={(e) => {
-                            e.preventDefault();
-                            history.push("/dashboard");
-                        }}>Discard Activity</IonButton>
-                    </IonCardContent>
-                </IonCard>
-                {/* Defer to summary view by passing down information */}
-                <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance}
-                             averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin}
-                             lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality}
-                             altitudes={altitudes} type={activityType}/>
-            </IonContent>
-        </IonPage>
+        <SummaryView totalTime={totalTime} startTime={startTime} endTime={endTime} totalDistance={totalDistance} averageSpeed={averageSpeed} positions={positions} latOrigin={latOrigin} lonOrigin={lonOrigin} latDest={latDest} lonDest={lonDest} locality={locality} altitudes={altitudes} activityType={activityType} executeSave={executeSave}/>
     );
 };
 

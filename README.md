@@ -7,7 +7,7 @@ GeoTracker is built using the Ionic platform on top of React. In order to run th
 several prerequisites are required.
 
 The project directory can be cloned using git from the following link: <br>
-```git clone -b master https://gitlab.ecs.vuw.ac.nz/course-work/swen325/2021/assignment2/ekambavaib/swen325-assignment-3```
+```git clone https://gitlab.ecs.vuw.ac.nz/course-work/swen325/2021/assignment2/ekambavaib/swen325-assignment-3```
 <br> Once cloned, switch to the project folder by changing directory to `swen325-assignment-3`
 <br> ```cd swen325-assignment3```
 

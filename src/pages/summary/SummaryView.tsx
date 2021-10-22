@@ -14,6 +14,9 @@ import {
 import React from "react";
 import {ActivitySummaryView} from "../../components/ActivitySummaryView";
 
+/**
+ * Summary View.
+ */
 export function SummaryView(props: {executeSave: any,totalTime: any, startTime: any, endTime: any, totalDistance: any, averageSpeed: any, positions: any, latOrigin: any, lonOrigin: any, latDest: any, lonDest: any,locality: any, altitudes: any, activityType: any }) {
     let {executeSave, totalTime, startTime, endTime, totalDistance, averageSpeed, positions, latOrigin, lonOrigin, latDest, lonDest, locality, altitudes, activityType} = props;
     let history = useHistory();

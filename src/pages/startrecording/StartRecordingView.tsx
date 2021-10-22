@@ -13,6 +13,9 @@ import {
 import {arrowBack} from "ionicons/icons";
 import React from "react";
 
+/**
+ * Start Recording View.
+ */
 export function StartRecordingView(props: {activityType: any,startProgressBar: any, startRecordingButtonHandler: any }) {
     let {activityType, startProgressBar, startRecordingButtonHandler} = props;
     let history = useHistory();

@@ -12,6 +12,9 @@ import {
 } from "@ionic/react";
 import React from "react";
 
+/**
+ * Settings View.
+ */
 export function SettingsView(props: {deleteThisActivity: any}) {
     let {deleteThisActivity} = props;
     let history = useHistory();

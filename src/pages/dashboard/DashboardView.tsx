@@ -14,6 +14,9 @@ import {LastActivity} from "../../components/LastActivity";
 import React from "react";
 import {useHistory} from "react-router-dom";
 
+/**
+ * Dashboard View.
+ */
 export function DashboardView(props: { dailyTime: any, dailyDistance: any, trendsTime: any, trendsDistance: any, entities: any }) {
     let {dailyTime, dailyDistance, trendsTime, trendsDistance, entities} = props;
 
